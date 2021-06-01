@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>RequestContainer</class>
+ <widget class="QWidget" name="RequestContainer">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>599</width>
+    <height>445</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QTabWidget::pane {
+    margin: 0;
+	border: none;
+}
+</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QTabWidget" name="paramsTabView">
+     <property name="currentIndex">
+      <number>2</number>
+     </property>
+     <widget class="QWidget" name="paramsTab">
+      <attribute name="title">
+       <string>Params</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="headersTab">
+      <attribute name="title">
+       <string>Headers</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="bodyTab">
+      <attribute name="title">
+       <string>Body</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QTabWidget" name="tabWidget">
+         <property name="tabPosition">
+          <enum>QTabWidget::South</enum>
+         </property>
+         <property name="currentIndex">
+          <number>4</number>
+         </property>
+         <widget class="QWidget" name="bodyNone">
+          <attribute name="title">
+           <string>None</string>
+          </attribute>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>No Request Body.</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="bodyRaw">
+          <attribute name="title">
+           <string>Raw</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="bodyFormData">
+          <attribute name="title">
+           <string>Form Data</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="bodyFormUrlEncoded">
+          <attribute name="title">
+           <string>Form Url-Encoded</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="bodyBinary">
+          <attribute name="title">
+           <string>Binary</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QWidget" name="widget" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <item>
+               <widget class="QPushButton" name="binaryBodyOpenDiagButton">
+                <property name="text">
+                 <string>Open File</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="binaryBodyLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>No File Selected.</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="widget_2" native="true">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
