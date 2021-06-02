@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+#include <src/services/httpclient.h>
+
 #include "requestcontainer.h"
 #include "responsecontainer.h"
 
@@ -23,10 +25,14 @@ private slots:
 
     void on_switchResponseButton_clicked(bool checked);
 
+    void on_sendButton_clicked();
+
 private:
     Ui::RequestEditor *ui;
     RequestContainer *requestContainer;
     ResponseContainer *responseContainer;
+
+    HttpClient *m_httpClient;
 };
 
 #endif // REQUESTEDITOR_H

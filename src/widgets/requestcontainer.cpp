@@ -4,6 +4,8 @@
 #include "QVBoxLayout"
 #include "paramtable.h"
 
+#include <QFileDialog>
+
 RequestContainer::RequestContainer(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::RequestContainer)
@@ -54,3 +56,11 @@ RequestContainer::~RequestContainer()
 {
     delete ui;
 }
+
+void RequestContainer::on_binaryBodyOpenDiagButton_clicked()
+{
+    QFileDialog diag;
+    auto file = diag.getOpenFileName();
+    ui->binaryBodyLabel->setText(QString("You opened %1").arg(file));
+}
+

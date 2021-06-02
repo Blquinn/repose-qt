@@ -9,15 +9,17 @@ public:
     ParamTableRow();
     ParamTableRow(QString key, QString value, QString description);
 
-    QString key() const { return m_key; }
-    QString value() const { return m_value; }
-    QString description() const { return m_description; }
+    const QString &key() const;
+    void setKey(const QString &newKey);
 
-    void setKey(QString key) { m_key = key; }
-    void setValue(QString value) { m_value = value; }
-    void setDescription(QString description) { m_description = description; }
+    const QString &value() const;
+    void setValue(const QString &newValue);
+
+    const QString &description() const;
+    void setDescription(const QString &newDescription);
 
     bool isEmpty() const { return m_key.isEmpty() && m_value.isEmpty() && m_description.isEmpty(); }
+
 private:
     QString m_key;
     QString m_value;

@@ -20,6 +20,9 @@ public:
     explicit RequestContainer(QWidget *parent = nullptr);
     ~RequestContainer();
 
+private slots:
+    void on_binaryBodyOpenDiagButton_clicked();
+
 private:
     Ui::RequestContainer *ui;
 

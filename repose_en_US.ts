@@ -8,6 +8,16 @@
         <source>MainWindow</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="src/widgets/mainwindow.cpp" line="95"/>
+        <source>Show side panel.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/widgets/mainwindow.cpp" line="107"/>
+        <source>New Request.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ParamTable</name>
@@ -134,8 +144,53 @@
 <context>
     <name>ResponseContainer</name>
     <message>
-        <location filename="src/widgets/responsecontainer.ui" line="16"/>
+        <location filename="src/widgets/responsecontainer.ui" line="14"/>
         <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/widgets/responsecontainer.ui" line="78"/>
+        <source>Status: -</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/widgets/responsecontainer.ui" line="109"/>
+        <source>Time: -</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/widgets/responsecontainer.ui" line="140"/>
+        <source>Size: -</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/widgets/responsecontainer.ui" line="160"/>
+        <source>Headers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/widgets/responsecontainer.ui" line="185"/>
+        <source>Body</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/widgets/responsecontainer.ui" line="213"/>
+        <source>Pretty</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/widgets/responsecontainer.ui" line="218"/>
+        <source>Raw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/widgets/responsecontainer.ui" line="244"/>
+        <source>Preview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/widgets/responsecontainer.ui" line="266"/>
+        <source>about:blank</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

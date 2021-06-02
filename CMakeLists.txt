@@ -24,8 +24,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #    endif()
 #endif()
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools WebEngineWidgets REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools WebEngineWidgets REQUIRED)
 find_package(KF5TextEditor REQUIRED)
 
 set(TS_FILES repose_en_US.ts)
@@ -40,6 +40,10 @@ set(PROJECT_SOURCES
         src/widgets/paramtable.h src/widgets/paramtable.cpp src/widgets/paramtable.ui
         src/models/paramtablemodel.h src/models/paramtablemodel.cpp
         src/models/paramtablerow.h src/models/paramtablerow.cpp
+        src/models/request.h src/models/request.cpp
+        src/models/response.h src/models/response.cpp
+        src/services/httpclient.h src/services/httpclient.cpp
+        src/utils/mimemapper.h src/utils/mimemapper.cpp
         ${TS_FILES}
 )
 
@@ -65,7 +69,7 @@ else()
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
-target_link_libraries(repose PRIVATE Qt${QT_VERSION_MAJOR}::Widgets KF5::TextEditor)
+target_link_libraries(repose PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::WebEngineWidgets KF5::TextEditor)
 
 set_target_properties(repose PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
