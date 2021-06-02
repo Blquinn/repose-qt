@@ -9,12 +9,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/widgets/mainwindow.cpp" line="95"/>
+        <location filename="src/widgets/mainwindow.cpp" line="80"/>
         <source>Show side panel.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/widgets/mainwindow.cpp" line="107"/>
+        <location filename="src/widgets/mainwindow.cpp" line="92"/>
         <source>New Request.</source>
         <translation type="unfinished"></translation>
     </message>

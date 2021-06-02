@@ -22,6 +22,7 @@ void HttpClient::initiateRequest(Request *request)
 // TODO: Store responses in /tmp file system
 void HttpClient::onResponseReceived(QNetworkReply *reply)
 {
+    // TODO: Handle errors.
     if (reply->error()) {
         qDebug() << reply->errorString();
         return;

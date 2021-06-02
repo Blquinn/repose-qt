@@ -10,6 +10,10 @@
 #include <QToolBar>
 #include <QVBoxLayout>
 
+int getSideBarWidth(int editorWidth) {
+    return editorWidth / 3;
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -31,7 +35,6 @@ MainWindow::MainWindow(QWidget *parent)
     auto requestEditorLayout = new QVBoxLayout(this);
     requestEditorLayout->setSpacing(0);
     requestEditorLayout->setMargin(0);
-//    requestEditorLayout->setRigh
     requestEditorLayout->setContentsMargins(0, 0, 5, 5);
     requestEditorLayout->addWidget(requestEditor);
     ui->requestResponseContainer->setLayout(requestEditorLayout);
@@ -46,14 +49,14 @@ MainWindow::MainWindow(QWidget *parent)
     tabBarLayout->setMargin(0);
     ui->tabBarContainer->setLayout(tabBarLayout);
 
-    m_requestListPreviousWidth = ui->requestList->width();
-
     connect(actionShowSideBar, &QAction::toggled, this, &MainWindow::on_actionShow_Sidebar_toggled);
     connect(actionNewRequest, &QAction::triggered, this, &MainWindow::on_actionNew_Request_triggered);
 
     actionShowSideBar->toggle();
 
-//    ui->splitter->
+    auto sbw = getSideBarWidth(width());
+    ui->splitter->setSizes({sbw, width()-sbw});
+    m_requestListPreviousWidth = ui->requestList->width();
 }
 
 MainWindow::~MainWindow()
@@ -97,7 +100,7 @@ void MainWindow::on_actionShow_Sidebar_toggled(bool toggled)
 {
     if (actionShowSideBar->isChecked() && m_requestListPreviousWidth == 0) {
         auto reWidth = ui->requestResponseContainer->width();
-        auto newWidth = reWidth / 3;
+        auto newWidth = getSideBarWidth(reWidth);
         ui->splitter->setSizes({newWidth, reWidth-newWidth});
         return;
     }
@@ -117,7 +120,9 @@ void MainWindow::on_splitter_splitterMoved(int pos, int index)
 
     auto checked = actionShowSideBar->isChecked();
     auto check = pos != 0;
-    if (checked != check)
-        actionShowSideBar->setChecked(pos != 0);
-}
+    if (checked != check) {
+        QSignalBlocker block(actionShowSideBar);
 
+        actionShowSideBar->setChecked(pos != 0);
+    }
+}

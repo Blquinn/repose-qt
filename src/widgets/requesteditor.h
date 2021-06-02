@@ -27,6 +27,8 @@ private slots:
 
     void on_sendButton_clicked();
 
+    void on_urlEdit_returnPressed();
+
 private:
     Ui::RequestEditor *ui;
     RequestContainer *requestContainer;

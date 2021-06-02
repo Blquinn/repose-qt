@@ -20,11 +20,8 @@ public:
 
 private slots:
     void on_actionNew_Request_triggered();
-
     void on_actionShow_Sidebar_toggled(bool arg1);
-
     void on_splitter_splitterMoved(int pos, int index);
-
 private:
     Ui::MainWindow *ui;
     RequestTree *requestTree;

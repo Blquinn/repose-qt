@@ -55,3 +55,9 @@ void RequestEditor::on_sendButton_clicked()
     request->setMethod(ui->methodCombo->currentText());
     m_httpClient->initiateRequest(request);
 }
+
+void RequestEditor::on_urlEdit_returnPressed()
+{
+    ui->sendButton->click();
+}
+
