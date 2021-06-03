@@ -1,7 +1,12 @@
+#include "sstream"
+
 #include "responsecontainer.h"
 #include "ui_responsecontainer.h"
 
-#include <src/utils/mimemapper.h>
+#include "src/utils/mimemapper.h"
+#include "vendor/hexdump/Hexdump.hpp"
+
+#include <QBuffer>
 
 ResponseContainer::ResponseContainer(HttpClient *httpClient, QWidget *parent) : QWidget(parent)
   , ui(new Ui::ResponseContainer)
@@ -37,26 +42,57 @@ ResponseContainer::~ResponseContainer()
     delete ui;
 }
 
+bool isPreviewableResponse(QString contentType)
+{
+    if (contentType == "text/html") return true;
+    if (contentType.startsWith("image")) return true;
+    return false;
+}
+
+bool isBinaryFormat(QString contentType) {
+    if (contentType == "") return true;
+    if (contentType == "application/octet-stream") return true;
+    if (contentType.startsWith("image")) return true;
+    return false;
+}
+
 void ResponseContainer::onResponseReceived(Response *response)
 {
     QString headerMarkup;
-    foreach (const auto &p, response->headers())
-        headerMarkup += QString("<b>%1:</b> %2<br>").arg(p.first, p.first);
+    for (const auto &p : response->headers())
+        headerMarkup += QString("<b>%1:</b> %2<br>").arg(p.first, p.second);
 
     ui->requestHeadersText->setText(headerMarkup);
 
+    // TODO: Do we actually want this?
+    QByteArray body;
+    if (isBinaryFormat(response->contentType())) {
+        std::stringstream str;
+
+        str << Hexdump((unsigned char*) response->body().constData(), response->body().size());
+
+        body = str.str().c_str();
+    } else {
+        body = response->body();
+    }
+
     m_prettyResponseDocument->setReadWrite(true);
-    m_prettyResponseDocument->setText(response->body());
+    m_prettyResponseDocument->setText(body);
     m_prettyResponseView->scroll(0, 0);
     KTextEditor::Cursor cur;
     cur.setPosition(0, 0);
     m_prettyResponseView->setScrollPosition(cur);
     m_prettyResponseDocument->setReadWrite(false);
-    auto mode = MimeMapper::mapMime(response->contentType().split(";")[0].trimmed().toLower());
+    auto mimeType = response->contentType().split(";")[0].trimmed().toLower();
+    auto mode = MimeMapper::mapMime(mimeType);
     m_prettyResponseDocument->setHighlightingMode(mode);
 
-    ui->responseTextRaw->document()->setPlainText(response->body());
+    ui->responseTextRaw->document()->setPlainText(body);
     ui->responseTextRaw->scroll(0, 0);
 
-    ui->previewWebEngine->setContent(response->body(), response->contentType());
+    if (isPreviewableResponse(mimeType)) {
+        ui->previewWebEngine->setContent(response->body(), mimeType);
+    } else {
+        ui->previewWebEngine->setContent("", "text/plain; charset=UTF-8");
+    }
 }

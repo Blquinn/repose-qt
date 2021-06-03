@@ -184,12 +184,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/widgets/responsecontainer.ui" line="244"/>
+        <location filename="src/widgets/responsecontainer.ui" line="249"/>
         <source>Preview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/widgets/responsecontainer.ui" line="266"/>
+        <location filename="src/widgets/responsecontainer.ui" line="271"/>
         <source>about:blank</source>
         <translation type="unfinished"></translation>
     </message>

@@ -32,18 +32,20 @@ set(TS_FILES repose_en_US.ts)
 
 set(PROJECT_SOURCES
         main.cpp
-        src/widgets/mainwindow.h src/widgets/mainwindow.cpp src/widgets/mainwindow.ui
-        src/widgets/requesttree.h src/widgets/requesttree.cpp src/widgets/requesttree.ui
-        src/widgets/requesteditor.h src/widgets/requesteditor.cpp src/widgets/requesteditor.ui
-        src/widgets/requestcontainer.h src/widgets/requestcontainer.cpp src/widgets/requestcontainer.ui
+        src/widgets/mainwindow.h        src/widgets/mainwindow.cpp        src/widgets/mainwindow.ui
+        src/widgets/requesttree.h       src/widgets/requesttree.cpp       src/widgets/requesttree.ui
+        src/widgets/requesteditor.h     src/widgets/requesteditor.cpp     src/widgets/requesteditor.ui
+        src/widgets/requestcontainer.h  src/widgets/requestcontainer.cpp  src/widgets/requestcontainer.ui
         src/widgets/responsecontainer.h src/widgets/responsecontainer.cpp src/widgets/responsecontainer.ui
-        src/widgets/paramtable.h src/widgets/paramtable.cpp src/widgets/paramtable.ui
-        src/models/paramtablemodel.h src/models/paramtablemodel.cpp
-        src/models/paramtablerow.h src/models/paramtablerow.cpp
-        src/models/request.h src/models/request.cpp
-        src/models/response.h src/models/response.cpp
-        src/services/httpclient.h src/services/httpclient.cpp
-        src/utils/mimemapper.h src/utils/mimemapper.cpp
+        src/widgets/paramtable.h        src/widgets/paramtable.cpp        src/widgets/paramtable.ui
+        src/models/paramtablemodel.h    src/models/paramtablemodel.cpp
+        src/models/paramtablerow.h      src/models/paramtablerow.cpp
+        src/models/request.h            src/models/request.cpp
+        src/models/response.h           src/models/response.cpp
+        src/services/httpclient.h       src/services/httpclient.cpp
+        src/utils/mimemapper.h          src/utils/mimemapper.cpp
+        vendor/QtWaitingSpinner/waitingspinnerwidget.h vendor/QtWaitingSpinner/waitingspinnerwidget.cpp
+        vendor/hexdump/Hexdump.hpp
         ${TS_FILES}
 )
 

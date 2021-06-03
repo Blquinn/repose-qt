@@ -1,0 +1,6 @@
+[submodule "vendor/QtWaitingSpinner"]
+	path = vendor/QtWaitingSpinner
+	url = https://github.com/snowwlex/QtWaitingSpinner
+[submodule "vendor/hexdump"]
+	path = vendor/hexdump
+	url = https://github.com/zmb3/hexdump

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>434</height>
+    <width>668</width>
+    <height>509</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -153,7 +153,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="headersTab">
       <attribute name="title">
@@ -206,7 +206,7 @@
           <enum>QTabWidget::South</enum>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="responseBodyPrettyTab">
           <attribute name="title">
@@ -232,6 +232,11 @@
            </property>
            <item>
             <widget class="QPlainTextEdit" name="responseTextRaw">
+             <property name="font">
+              <font>
+               <family>Monospace</family>
+              </font>
+             </property>
              <property name="readOnly">
               <bool>true</bool>
              </property>

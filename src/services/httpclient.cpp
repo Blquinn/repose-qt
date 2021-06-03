@@ -38,7 +38,7 @@ void HttpClient::onResponseReceived(QNetworkReply *reply)
     res->setResponseTime(req->startRequestTime().msecsTo(now));
 
     QList<QPair<QString, QString>> headers;
-    foreach (const auto &p, reply->rawHeaderPairs())
+    for (const auto &p : reply->rawHeaderPairs())
         headers.append(QPair<QString, QString>(p.first, p.second));
 
     auto ct = reply->header(QNetworkRequest::ContentTypeHeader);

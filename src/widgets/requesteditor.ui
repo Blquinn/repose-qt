@@ -172,13 +172,36 @@
     </widget>
    </item>
    <item>
-    <widget class="QStackedWidget" name="requestResponseStack">
+    <widget class="QStackedWidget" name="loadingSpinnerStack">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="currentIndex">
+      <number>1</number>
+     </property>
+     <widget class="QWidget" name="loadingSpinnerContainer"/>
+     <widget class="QWidget" name="requestResponseStackContainer">
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QStackedWidget" name="requestResponseStack"/>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>
