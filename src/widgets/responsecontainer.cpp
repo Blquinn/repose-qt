@@ -4,15 +4,17 @@
 #include "ui_responsecontainer.h"
 
 #include "src/utils/mimemapper.h"
+#include "src/models/response.h"
 #include "vendor/hexdump/Hexdump.hpp"
 
 #include <QBuffer>
 
-ResponseContainer::ResponseContainer(HttpClient *httpClient, QWidget *parent) : QWidget(parent)
+ResponseContainer::ResponseContainer(RootState *rootState, HttpClient *httpClient, QWidget *parent) : QWidget(parent)
   , ui(new Ui::ResponseContainer)
   , m_httpClient(httpClient)
 {
     ui->setupUi(this);
+    m_rootState = rootState;
 
     m_prettyResponseEditor = KTextEditor::Editor::instance();
     m_prettyResponseDocument = m_prettyResponseEditor->createDocument(0);
@@ -34,7 +36,7 @@ ResponseContainer::ResponseContainer(HttpClient *httpClient, QWidget *parent) : 
     ui->responseBodyPrettyTab->setLayout(prettyResponseLayout);
     prettyResponseLayout->addWidget(m_prettyResponseView);
 
-    QObject::connect(m_httpClient, SIGNAL(responseReceived(Response*)), this, SLOT(onResponseReceived(Response*)));
+    connect(m_httpClient, &HttpClient::responseReceived, this, &ResponseContainer::onResponseReceived);
 }
 
 ResponseContainer::~ResponseContainer()
@@ -56,7 +58,7 @@ bool isBinaryFormat(QString contentType) {
     return false;
 }
 
-void ResponseContainer::onResponseReceived(Response *response)
+void ResponseContainer::onResponseReceived(ResponsePtr response)
 {
     QString headerMarkup;
     for (const auto &p : response->headers())
@@ -89,10 +91,23 @@ void ResponseContainer::onResponseReceived(Response *response)
 
     ui->responseTextRaw->document()->setPlainText(body);
     ui->responseTextRaw->scroll(0, 0);
+    ui->responseTextRaw->centerOnScroll();
 
     if (isPreviewableResponse(mimeType)) {
         ui->previewWebEngine->setContent(response->body(), mimeType);
     } else {
         ui->previewWebEngine->setContent("", "text/plain; charset=UTF-8");
     }
+}
+
+void ResponseContainer::bindRequest()
+{
+    // Unbind current bindings.
+    auto req = m_rootState->activeRequest();
+    if (req.isNull()) return;
+
+    auto res = req->response();
+    if (res.isNull()) return;
+
+    onResponseReceived(res);
 }

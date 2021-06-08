@@ -2,6 +2,7 @@
 #define PARAMTABLEMODEL_H
 
 #include <QAbstractTableModel>
+#include <QSharedPointer>
 
 #include "paramtablerow.h"
 
@@ -23,5 +24,9 @@ public:
 private:
     QList<ParamTableRow> m_paramList;
 };
+
+typedef QSharedPointer<ParamTableModel> ParamTableModelPtr;
+
+Q_DECLARE_METATYPE(ParamTableModelPtr)
 
 #endif // PARAMTABLEMODEL_H

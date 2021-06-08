@@ -8,6 +8,7 @@
 #include <KTextEditor/View>
 
 #include <src/services/httpclient.h>
+#include <src/models/rootstate.h>
 
 namespace Ui {
 class ResponseContainer;
@@ -18,13 +19,16 @@ class ResponseContainer : public QWidget
     Q_OBJECT
 
 public:
-    explicit ResponseContainer(HttpClient *httpClient, QWidget *parent = nullptr);
+    explicit ResponseContainer(RootState *rootState, HttpClient *httpClient, QWidget *parent = nullptr);
     ~ResponseContainer();
 
 private slots:
-    void onResponseReceived(Response* response);
+    void onResponseReceived(ResponsePtr response);
+private:
+    void bindRequest();
 private:
     Ui::ResponseContainer *ui;
+    RootState *m_rootState;
     HttpClient *m_httpClient;
 
     KTextEditor::Editor *m_prettyResponseEditor;

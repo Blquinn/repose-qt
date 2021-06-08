@@ -1,6 +1,6 @@
 #include "response.h"
 
-Response::Response(Request *request, QObject *parent) : QObject(parent)
+Response::Response(QWeakPointer<Request> request, QObject *parent) : QObject(parent)
     , m_request(request)
     , m_contentType("")
     , m_headers()
@@ -12,10 +12,10 @@ Response::~Response()
 {
 }
 
-Request *Response::request() const
-{
-    return m_request;
-}
+//Request *Response::request() const
+//{
+//    return m_request;
+//}
 
 const QByteArray& Response::body() const
 {

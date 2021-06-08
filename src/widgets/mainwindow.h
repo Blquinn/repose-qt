@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include <src/models/rootstate.h>
+
 #include "requesttree.h"
 #include "requesteditor.h"
 
@@ -30,7 +32,9 @@ private:
     int m_requestListPreviousWidth;
 
     QToolBar *buildToolBar();
+    QToolBar m_requestTabs();
     QAction *actionNewRequest;
     QAction *actionShowSideBar;
+    RootState *m_rootState;
 };
 #endif // MAINWINDOW_H

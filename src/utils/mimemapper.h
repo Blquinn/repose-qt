@@ -6,6 +6,7 @@
 // Maps common mime types to the KTextEditor highlight mode.
 const QMap<QString, QString> mimeMap = {
     {"", "None"},
+    {"text/plain", "None"},
     {"text/css", "CSS"},
     {"text/html", "HTML"},
     {"application/json", "JSON"},

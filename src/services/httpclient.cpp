@@ -6,7 +6,7 @@ HttpClient::HttpClient(QObject *parent) : QObject(parent)
     QObject::connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onResponseReceived(QNetworkReply*)));
 }
 
-void HttpClient::initiateRequest(Request *request)
+void HttpClient::initiateRequest(RequestPtr request)
 {
     qDebug() << "Initiating a request to " << request->url();
 
@@ -22,20 +22,20 @@ void HttpClient::initiateRequest(Request *request)
 // TODO: Store responses in /tmp file system
 void HttpClient::onResponseReceived(QNetworkReply *reply)
 {
-    // TODO: Handle errors.
+    auto v = reply->request().attribute(QNetworkRequest::User);
+    auto req = v.value<RequestPtr>();
+    ResponsePtr res(new Response(req.toWeakRef(), req.get()));
+    QDateTime now(QDateTime::currentDateTimeUtc());
+    res->setResponseTime(req->startRequestTime().msecsTo(now));
+
     if (reply->error()) {
-        qDebug() << reply->errorString();
+        qWarning() << reply->errorString();
+        res->setBody("Error: " + reply->errorString().toUtf8());
+        emit responseReceived(res);
         return;
     }
 
-    QObject *obj = qvariant_cast<QObject*>(reply->request().attribute(QNetworkRequest::User));
-    Request *req = qobject_cast<Request*>(obj);
-
     auto answer = reply->readAll();
-
-    auto res = new Response(req, req);
-    QDateTime now(QDateTime::currentDateTimeUtc());
-    res->setResponseTime(req->startRequestTime().msecsTo(now));
 
     QList<QPair<QString, QString>> headers;
     for (const auto &p : reply->rawHeaderPairs())
@@ -46,5 +46,6 @@ void HttpClient::onResponseReceived(QNetworkReply *reply)
 
     res->setHeaders(headers);
     res->setBody(answer);
+    req->setResponse(res);
     emit responseReceived(res);
 }

@@ -42,6 +42,7 @@ set(PROJECT_SOURCES
         src/models/paramtablerow.h      src/models/paramtablerow.cpp
         src/models/request.h            src/models/request.cpp
         src/models/response.h           src/models/response.cpp
+        src/models/rootstate.h          src/models/rootstate.cpp
         src/services/httpclient.h       src/services/httpclient.cpp
         src/utils/mimemapper.h          src/utils/mimemapper.cpp
         vendor/QtWaitingSpinner/waitingspinnerwidget.h vendor/QtWaitingSpinner/waitingspinnerwidget.cpp

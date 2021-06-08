@@ -13,6 +13,11 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QTabBar::tab {
+	max-width: 100px;
+}</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <property name="spacing">
@@ -88,7 +93,7 @@
          <widget class="QWidget" name="tabBarContainer" native="true"/>
         </item>
         <item>
-         <widget class="QWidget" name="requestResponseContainer" native="true">
+         <widget class="QStackedWidget" name="emptyStack">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -107,6 +112,27 @@
             <height>0</height>
            </size>
           </property>
+          <widget class="QWidget" name="emptyPage">
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;No request has been selected.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Select a new request in the left hand panel, or create a new request with the button on the top right corner.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+              <property name="margin">
+               <number>30</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="requestResponseContainer" native="true"/>
          </widget>
         </item>
        </layout>

@@ -9,6 +9,7 @@
 #include <QTabBar>
 #include <QToolBar>
 #include <QVBoxLayout>
+#include <QMetaObject>
 
 int getSideBarWidth(int editorWidth) {
     return editorWidth / 3;
@@ -20,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     , m_requestListPreviousWidth(0)
     , actionNewRequest(nullptr)
     , actionShowSideBar(nullptr)
+    , m_rootState(new RootState(this))
 {
     ui->setupUi(this);
     addToolBar(buildToolBar());
@@ -31,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     requestListLayout->setMargin(0);
     ui->requestList->setLayout(requestListLayout);
 
-    requestEditor = new RequestEditor(ui->requestResponseContainer);
+    requestEditor = new RequestEditor(m_rootState, ui->requestResponseContainer);
     auto requestEditorLayout = new QVBoxLayout(this);
     requestEditorLayout->setSpacing(0);
     requestEditorLayout->setMargin(0);
@@ -40,12 +42,14 @@ MainWindow::MainWindow(QWidget *parent)
     ui->requestResponseContainer->setLayout(requestEditorLayout);
 
     auto tabBarLayout = new QVBoxLayout(this);
-    auto tabBar = new QTabBar(this);
-    tabBar->setMovable(true);
-    tabBar->setTabsClosable(true);
-    tabBar->addTab("Tab 1");
-    tabBar->setExpanding(false);
-    tabBarLayout->addWidget(tabBar);
+    auto m_requestTabs = new QTabBar(this);
+    // TODO: Allow moving of tabs
+    // m_requestTabs->setMovable(true);
+    m_requestTabs->setTabsClosable(true);
+    m_requestTabs->setExpanding(false);
+    m_requestTabs->setElideMode(Qt::ElideRight);
+//    m_requestTabs->set
+    tabBarLayout->addWidget(m_requestTabs);
     tabBarLayout->setMargin(0);
     ui->tabBarContainer->setLayout(tabBarLayout);
 
@@ -57,6 +61,50 @@ MainWindow::MainWindow(QWidget *parent)
     auto sbw = getSideBarWidth(width());
     ui->splitter->setSizes({sbw, width()-sbw});
     m_requestListPreviousWidth = ui->requestList->width();
+
+    // Bindings
+
+    connect(m_rootState, &RootState::requestListAdded, this, [=](int idx) {
+        auto req = m_rootState->requestList()[idx];
+
+        m_requestTabs->insertTab(idx, req->displayName());
+        connect(req.get(), &Request::nameChanged, this, [=]() {
+            m_requestTabs->setTabText(idx, req->name());
+        });
+    });
+
+    connect(m_rootState, &RootState::requestListRemoved, this, [=](int idx) {
+        m_requestTabs->removeTab(idx);
+    });
+
+    connect(m_requestTabs, &QTabBar::tabCloseRequested, this, [=](int idx) {
+        m_rootState->removeFromRequestList(idx);
+        // If the active req was deleted, try activating the one to the left if available,
+        // otherwise the one to the right.
+        if (idx-1 >= 0) {
+            m_rootState->setActiveRequest(m_rootState->requestList()[idx-1]);
+        } else if (idx <= m_rootState->requestList().length()-1) {
+            m_rootState->setActiveRequest(m_rootState->requestList()[idx]);
+        } else {
+            m_rootState->setActiveRequest(nullptr);
+        }
+    });
+
+    connect(m_requestTabs, &QTabBar::currentChanged, this, [=](int idx) {
+        if (idx < 0 || m_rootState->requestList().isEmpty()) return;
+
+        m_rootState->setActiveRequest(m_rootState->requestList()[idx]);
+    });
+
+    connect(m_rootState, &RootState::activeRequestChanged, this, [=]() {
+        if (m_rootState->activeRequest() == nullptr) {
+            ui->emptyStack->setCurrentWidget(ui->emptyPage);
+            return;
+        }
+
+        ui->emptyStack->setCurrentWidget(ui->requestResponseContainer);
+        m_requestTabs->setCurrentIndex(m_rootState->requestList().indexOf(m_rootState->activeRequest()));
+    });
 }
 
 MainWindow::~MainWindow()
@@ -67,8 +115,11 @@ MainWindow::~MainWindow()
 void MainWindow::on_actionNew_Request_triggered()
 {
     qDebug() << "New request button pressed.";
-}
 
+    RequestPtr req (new Request());
+    m_rootState->addActiveRequest(req);
+    m_rootState->setActiveRequest(req);
+}
 
 QToolBar* MainWindow::buildToolBar()
 {

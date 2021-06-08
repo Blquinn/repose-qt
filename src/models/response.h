@@ -7,15 +7,22 @@
 #include <QList>
 #include <QObject>
 #include <QWeakPointer>
+#include <QSharedPointer>
+
+class Request;
+
+typedef QList<QPair<QString, QString>> HeaderList;
 
 class Response : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QByteArray body READ body WRITE setBody NOTIFY bodyChanged)
+    Q_PROPERTY(qint64 responseTime READ responseTime WRITE setResponseTime NOTIFY responseTimeChanged)
+    Q_PROPERTY(HeaderList headers READ headers WRITE setHeaders NOTIFY headersChanged)
+    Q_PROPERTY(QString contentType READ contentType WRITE setContentType NOTIFY contentTypeChanged)
 public:
-    explicit Response(Request *request, QObject *parent = nullptr);
+    explicit Response(QWeakPointer<Request> request, QObject *parent = nullptr);
     ~Response();
-
-    Request *request() const;
 
     const QByteArray &body() const;
     void setBody(const QByteArray &newBody);
@@ -26,19 +33,26 @@ public:
     const qint64 &responseTime() const;
     void setResponseTime(const qint64 &newResponseTime);
 
-    const QList<QPair<QString, QString> > &headers() const;
-    void setHeaders(const QList<QPair<QString, QString> > &newHeaders);
+    const HeaderList &headers() const;
+    void setHeaders(const HeaderList &newHeaders);
 
 signals:
+    void bodyChanged();
+    void responseTimeChanged();
+    void headersChanged();
+    void contentTypeChanged();
 private:
-    Request *m_request;
+    QWeakPointer<Request> m_request;
     QByteArray m_body;
     QString m_contentType;
     // In ms
     qint64 m_responseTime;
-    QList<QPair<QString, QString>> m_headers;
+    HeaderList m_headers;
 };
 
+typedef QSharedPointer<Response> ResponsePtr;
+
 Q_DECLARE_METATYPE(Response*)
+Q_DECLARE_METATYPE(QSharedPointer<Response>)
 
 #endif // RESPONSE_H

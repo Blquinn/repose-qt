@@ -15,9 +15,9 @@ class HttpClient : public QObject
 public:
     explicit HttpClient(QObject *parent = nullptr);
 
-    void initiateRequest(Request *request);
+    void initiateRequest(RequestPtr request);
 signals:
-    void responseReceived(Response *response);
+    void responseReceived(ResponsePtr response);
 private slots:
     void onResponseReceived(QNetworkReply *reply);
 private:

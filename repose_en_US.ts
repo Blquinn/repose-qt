@@ -9,12 +9,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/widgets/mainwindow.cpp" line="80"/>
+        <location filename="src/widgets/mainwindow.ui" line="120"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;No request has been selected.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Select a new request in the left hand panel, or create a new request with the button on the top right corner.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/widgets/mainwindow.cpp" line="131"/>
         <source>Show side panel.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/widgets/mainwindow.cpp" line="92"/>
+        <location filename="src/widgets/mainwindow.cpp" line="143"/>
         <source>New Request.</source>
         <translation type="unfinished"></translation>
     </message>
