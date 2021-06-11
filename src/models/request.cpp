@@ -5,7 +5,7 @@ Request::Request(QObject *parent) : QObject(parent)
   , m_url("")
   , m_method("")
   , m_body("")
-  , m_startRequestTime()
+  , m_requestTimer()
   , m_params(new ParamTableModel())
   , m_headers(new ParamTableModel())
 {
@@ -20,11 +20,6 @@ const QString &Request::method() const
 const QString &Request::url() const
 {
     return m_url;
-}
-
-const QDateTime &Request::startRequestTime() const
-{
-    return m_startRequestTime;
 }
 
 const QString &Request::name() const
@@ -61,14 +56,6 @@ void Request::setMethod(const QString &newMethod)
         return;
     m_method = newMethod;
     emit methodChanged();
-}
-
-void Request::setStartRequestTime(const QDateTime &newStartRequestTime)
-{
-    if (m_startRequestTime == newStartRequestTime)
-        return;
-    m_startRequestTime = newStartRequestTime;
-    emit startRequestTimeChanged();
 }
 
 const QString &Request::body() const
@@ -121,4 +108,17 @@ void Request::setResponse(ResponsePtr newResponse)
         return;
     m_response = newResponse;
     emit responseChanged();
+}
+
+const QElapsedTimer &Request::requestTimer() const
+{
+    return m_requestTimer;
+}
+
+void Request::setRequestTimer(const QElapsedTimer &newRequestTimer)
+{
+    if (m_requestTimer == newRequestTimer)
+        return;
+    m_requestTimer = newRequestTimer;
+    emit requestTimerChanged();
 }

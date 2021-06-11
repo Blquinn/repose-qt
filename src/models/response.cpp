@@ -1,21 +1,18 @@
 #include "response.h"
 
 Response::Response(QWeakPointer<Request> request, QObject *parent) : QObject(parent)
-    , m_request(request)
-    , m_contentType("")
-    , m_headers()
-    , m_responseTime(0)
+  , m_request(request)
+  , m_contentType("")
+  , m_headers()
+  , m_responseTime(0)
+  , m_statusCode(0)
+  , m_statusLine()
 {
 }
 
 Response::~Response()
 {
 }
-
-//Request *Response::request() const
-//{
-//    return m_request;
-//}
 
 const QByteArray& Response::body() const
 {
@@ -55,4 +52,30 @@ const QList<QPair<QString, QString>> &Response::headers() const
 void Response::setHeaders(const QList<QPair<QString, QString> > &newHeaders)
 {
     m_headers = newHeaders;
+}
+
+int Response::statusCode() const
+{
+    return m_statusCode;
+}
+
+void Response::setStatusCode(int newStatusCode)
+{
+    if (m_statusCode == newStatusCode)
+        return;
+    m_statusCode = newStatusCode;
+    emit statusCodeChanged();
+}
+
+const QString &Response::statusLine() const
+{
+    return m_statusLine;
+}
+
+void Response::setStatusLine(const QString &newStatusLine)
+{
+    if (m_statusLine == newStatusLine)
+        return;
+    m_statusLine = newStatusLine;
+    emit statusLineChanged();
 }

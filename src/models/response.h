@@ -36,18 +36,32 @@ public:
     const HeaderList &headers() const;
     void setHeaders(const HeaderList &newHeaders);
 
+    int statusCode() const;
+    void setStatusCode(int newStatusCode);
+
+    const QString &statusLine() const;
+    void setStatusLine(const QString &newStatusLine);
+
 signals:
     void bodyChanged();
     void responseTimeChanged();
     void headersChanged();
     void contentTypeChanged();
+    void statusCodeChanged();
+
+    void statusLineChanged();
+
 private:
     QWeakPointer<Request> m_request;
     QByteArray m_body;
     QString m_contentType;
-    // In ms
+    // In ns
     qint64 m_responseTime;
+    int m_statusCode;
+    QString m_statusLine;
     HeaderList m_headers;
+    Q_PROPERTY(int statusCode READ statusCode WRITE setStatusCode NOTIFY statusCodeChanged)
+    Q_PROPERTY(QString statusLine READ statusLine WRITE setStatusLine NOTIFY statusLineChanged)
 };
 
 typedef QSharedPointer<Response> ResponsePtr;

@@ -6,6 +6,7 @@
 #include "src/utils/mimemapper.h"
 #include "src/models/response.h"
 #include "vendor/hexdump/Hexdump.hpp"
+#include "src/utils/humanize.h"
 
 #include <QBuffer>
 
@@ -87,11 +88,16 @@ void ResponseContainer::onResponseReceived(ResponsePtr response)
     m_prettyResponseDocument->setReadWrite(false);
     auto mimeType = response->contentType().split(";")[0].trimmed().toLower();
     auto mode = MimeMapper::mapMime(mimeType);
-    m_prettyResponseDocument->setHighlightingMode(mode);
+    m_prettyResponseDocument->setMode(mode);
 
     ui->responseTextRaw->document()->setPlainText(body);
     ui->responseTextRaw->scroll(0, 0);
     ui->responseTextRaw->centerOnScroll();
+
+    ui->timeLabel->setText(Humanize::timeSpan(response->responseTime()));
+    auto statusCodeText = response->statusCode() ? QString::number(response->statusCode()) : "-";
+    ui->statusLabel->setText(QString("%1 %2").arg(statusCodeText, response->statusLine()));
+    ui->sizeLabel->setText(Humanize::bytes(response->body().length()));
 
     if (isPreviewableResponse(mimeType)) {
         ui->previewWebEngine->setContent(response->body(), mimeType);

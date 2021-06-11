@@ -62,6 +62,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->splitter->setSizes({sbw, width()-sbw});
     m_requestListPreviousWidth = ui->requestList->width();
 
+    // Hide sidebar
+    actionShowSideBar->toggle();
+
     // Bindings
 
     connect(m_rootState, &RootState::requestListAdded, this, [=](int idx) {

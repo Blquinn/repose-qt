@@ -11,7 +11,9 @@ void HttpClient::initiateRequest(RequestPtr request)
     qDebug() << "Initiating a request to " << request->url();
 
     QNetworkRequest nr;
-    request->setStartRequestTime(QDateTime::currentDateTimeUtc());
+    QElapsedTimer timer;
+    timer.start();
+    request->setRequestTimer(timer);
     nr.setAttribute(QNetworkRequest::User, QVariant::fromValue(request));
     nr.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
     nr.setMaximumRedirectsAllowed(10);
@@ -25,11 +27,14 @@ void HttpClient::onResponseReceived(QNetworkReply *reply)
     auto v = reply->request().attribute(QNetworkRequest::User);
     auto req = v.value<RequestPtr>();
     ResponsePtr res(new Response(req.toWeakRef(), req.get()));
-    QDateTime now(QDateTime::currentDateTimeUtc());
-    res->setResponseTime(req->startRequestTime().msecsTo(now));
+    res->setResponseTime(req->requestTimer().nsecsElapsed());
 
-    if (reply->error()) {
+    // Show content based errors.
+    if (reply->error() >= QNetworkReply::ConnectionRefusedError &&
+        reply->error() <= QNetworkReply::UnknownProxyError) {
+
         qWarning() << reply->errorString();
+        res->setContentType("text/plain; charset=UTF-8");
         res->setBody("Error: " + reply->errorString().toUtf8());
         emit responseReceived(res);
         return;
@@ -43,6 +48,11 @@ void HttpClient::onResponseReceived(QNetworkReply *reply)
 
     auto ct = reply->header(QNetworkRequest::ContentTypeHeader);
     if (!ct.isNull()) res->setContentType(ct.toString());
+
+    auto status = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    res->setStatusCode(status);
+    auto statusLine = reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
+    res->setStatusLine(statusLine);
 
     res->setHeaders(headers);
     res->setBody(answer);
