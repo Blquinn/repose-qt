@@ -38,6 +38,9 @@ ResponseContainer::ResponseContainer(RootState *rootState, HttpClient *httpClien
     prettyResponseLayout->addWidget(m_prettyResponseView);
 
     connect(m_httpClient, &HttpClient::responseReceived, this, &ResponseContainer::onResponseReceived);
+    connect(m_rootState, &RootState::activeRequestChanged, this, [=]() {
+        bindRequest();
+    });
 }
 
 ResponseContainer::~ResponseContainer()
@@ -61,6 +64,23 @@ bool isBinaryFormat(QString contentType) {
 
 void ResponseContainer::onResponseReceived(ResponsePtr response)
 {
+    bindResponse(response);
+}
+
+void ResponseContainer::bindRequest()
+{
+    // Unbind current bindings.
+    auto req = m_rootState->activeRequest();
+    if (req.isNull()) return;
+
+    bindResponse(req->response());
+}
+
+void ResponseContainer::bindResponse(ResponsePtr response)
+{
+    // TODO: Clear out stuff.
+    if (response.isNull()) return;
+
     QString headerMarkup;
     for (const auto &p : response->headers())
         headerMarkup += QString("<b>%1:</b> %2<br>").arg(p.first, p.second);
@@ -104,16 +124,4 @@ void ResponseContainer::onResponseReceived(ResponsePtr response)
     } else {
         ui->previewWebEngine->setContent("", "text/plain; charset=UTF-8");
     }
-}
-
-void ResponseContainer::bindRequest()
-{
-    // Unbind current bindings.
-    auto req = m_rootState->activeRequest();
-    if (req.isNull()) return;
-
-    auto res = req->response();
-    if (res.isNull()) return;
-
-    onResponseReceived(res);
 }

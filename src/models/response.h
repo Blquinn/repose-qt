@@ -48,9 +48,7 @@ signals:
     void headersChanged();
     void contentTypeChanged();
     void statusCodeChanged();
-
     void statusLineChanged();
-
 private:
     QWeakPointer<Request> m_request;
     QByteArray m_body;

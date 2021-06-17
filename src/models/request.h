@@ -14,6 +14,11 @@ typedef QSharedPointer<Response> ResponsePtr;
 
 class Request : public QObject
 {
+public:
+    enum class MainTab { Request, Response };
+    enum class RequestAttributeSection { Params, Headers, Body };
+    enum class RequestBody { None, Raw, Form, UrlEncoded, Binary };
+
     Q_OBJECT
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(QString url READ url WRITE setUrl NOTIFY urlChanged)
@@ -23,6 +28,9 @@ class Request : public QObject
     Q_PROPERTY(ParamTableModelPtr params READ params WRITE setParams NOTIFY paramsChanged)
     Q_PROPERTY(ResponsePtr response READ response WRITE setResponse NOTIFY responseChanged)
     Q_PROPERTY(QElapsedTimer requestTimer READ requestTimer WRITE setRequestTimer NOTIFY requestTimerChanged)
+    Q_PROPERTY(MainTab activeTab READ activeTab WRITE setActiveTab NOTIFY activeTabChanged)
+    Q_PROPERTY(RequestAttributeSection activeSection READ activeSection WRITE setActiveSection NOTIFY activeSectionChanged)
+    Q_PROPERTY(RequestBody activeBody READ activeBody WRITE setActiveBody NOTIFY activeBodyChanged)
 public:
     explicit Request(QObject *parent = nullptr);
 
@@ -52,6 +60,15 @@ public:
     const QElapsedTimer &requestTimer() const;
     void setRequestTimer(const QElapsedTimer &newRequestTimer);
 
+    MainTab activeTab() const;
+    void setActiveTab(MainTab newActiveTab);
+
+    RequestAttributeSection activeSection() const;
+    void setActiveSection(RequestAttributeSection newActiveSection);
+
+    RequestBody activeBody() const;
+    void setActiveBody(RequestBody newActiveBody);
+
 signals:
     void nameChanged();
     void urlChanged();
@@ -62,6 +79,12 @@ signals:
     void headersChanged();
     void responseChanged();
     void requestTimerChanged();
+    void activeTabChanged();
+
+    void activeSectionChanged();
+
+    void activeBodyChanged();
+
 private:
     QString m_url;
     QString m_method;
@@ -71,6 +94,9 @@ private:
     ParamTableModelPtr m_params;
     ParamTableModelPtr m_headers;
     ResponsePtr m_response;
+    MainTab m_activeTab;
+    RequestAttributeSection m_activeSection;
+    RequestBody m_activeBody;
 };
 
 typedef QSharedPointer<Request> RequestPtr;

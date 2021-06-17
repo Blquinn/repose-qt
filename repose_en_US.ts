@@ -1701,15 +1701,15 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="src/widgets/responsecontainer.ui" line="78"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Status: &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="src/widgets/responsecontainer.ui" line="88"/>
         <location filename="src/widgets/responsecontainer.ui" line="126"/>
         <location filename="src/widgets/responsecontainer.ui" line="164"/>
         <source>-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/widgets/responsecontainer.ui" line="78"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Status: &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

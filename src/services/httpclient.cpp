@@ -29,6 +29,8 @@ void HttpClient::onResponseReceived(QNetworkReply *reply)
     ResponsePtr res(new Response(req.toWeakRef(), req.get()));
     res->setResponseTime(req->requestTimer().nsecsElapsed());
 
+//    reply->attribute(QNetworkRequest::Attribute::)
+
     // Show content based errors.
     if (reply->error() >= QNetworkReply::ConnectionRefusedError &&
         reply->error() <= QNetworkReply::UnknownProxyError) {

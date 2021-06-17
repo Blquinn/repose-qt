@@ -3,13 +3,15 @@
 Request::Request(QObject *parent) : QObject(parent)
   , m_name("")
   , m_url("")
-  , m_method("")
+  , m_method("GET")
   , m_body("")
   , m_requestTimer()
   , m_params(new ParamTableModel())
   , m_headers(new ParamTableModel())
+  , m_activeTab(MainTab::Request)
+  , m_activeSection(RequestAttributeSection::Params)
+  , m_activeBody(RequestBody::None)
 {
-
 }
 
 const QString &Request::method() const
@@ -121,4 +123,43 @@ void Request::setRequestTimer(const QElapsedTimer &newRequestTimer)
         return;
     m_requestTimer = newRequestTimer;
     emit requestTimerChanged();
+}
+
+Request::MainTab Request::activeTab() const
+{
+    return m_activeTab;
+}
+
+void Request::setActiveTab(MainTab newActiveTab)
+{
+    if (m_activeTab == newActiveTab)
+        return;
+    m_activeTab = newActiveTab;
+    emit activeTabChanged();
+}
+
+Request::RequestAttributeSection Request::activeSection() const
+{
+    return m_activeSection;
+}
+
+void Request::setActiveSection(RequestAttributeSection newActiveSection)
+{
+    if (m_activeSection == newActiveSection)
+        return;
+    m_activeSection = newActiveSection;
+    emit activeSectionChanged();
+}
+
+Request::RequestBody Request::activeBody() const
+{
+    return m_activeBody;
+}
+
+void Request::setActiveBody(RequestBody newActiveBody)
+{
+    if (m_activeBody == newActiveBody)
+        return;
+    m_activeBody = newActiveBody;
+    emit activeBodyChanged();
 }

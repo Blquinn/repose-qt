@@ -16,12 +16,19 @@ RequestEditor::RequestEditor(RootState *rootState, QWidget *parent) : QWidget(pa
     // Store the extra ones on a per-request basis.
     ui->methodCombo->addItems(m_defaultMethods);
 
-    requestContainer = new RequestContainer(this);
+    requestContainer = new RequestContainer(m_rootState, this);
     responseContainer = new ResponseContainer(rootState, m_httpClient, this);
     ui->requestResponseStack->addWidget(requestContainer);
     ui->requestResponseStack->addWidget(responseContainer);
 
-    connect(m_rootState, &RootState::activeRequestChanged, this, &RequestEditor::bindRequest);
+    QObject::connect(m_rootState, &RootState::activeRequestChanged, this, &RequestEditor::bindRequest);
+    QObject::connect(ui->switchRequestButton, &QPushButton::clicked, this, &RequestEditor::onSwitchRequestButtonClicked);
+    QObject::connect(ui->switchResponseButton, &QPushButton::clicked, this, &RequestEditor::onSwitchResponseButtonClicked);
+    QObject::connect(ui->sendButton, &QPushButton::clicked, this, &RequestEditor::onSendButtonClicked);
+    QObject::connect(ui->urlEdit, &QLineEdit::returnPressed, this, &RequestEditor::onUrlEditReturnPressed);
+    QObject::connect(ui->urlEdit, &QLineEdit::textEdited, this, &RequestEditor::onUrlEditTextEdited);
+    QObject::connect(ui->methodCombo, &QComboBox::currentTextChanged, this, &RequestEditor::onMethodComboCurrentTextChanged);
+    QObject::connect(ui->requestNameEdit, &QLineEdit::textChanged, this, &RequestEditor::onRequestNameEditTextEdited);
 }
 
 RequestEditor::~RequestEditor()
@@ -29,17 +36,19 @@ RequestEditor::~RequestEditor()
     delete ui;
 }
 
-void RequestEditor::on_switchRequestButton_clicked(bool checked)
+void RequestEditor::onSwitchRequestButtonClicked(bool checked)
 {
     ui->requestResponseStack->setCurrentWidget(requestContainer);
+    m_rootState->activeRequest()->setActiveTab(Request::MainTab::Request);
 }
 
-void RequestEditor::on_switchResponseButton_clicked(bool checked)
+void RequestEditor::onSwitchResponseButtonClicked(bool checked)
 {
     ui->requestResponseStack->setCurrentWidget(responseContainer);
+    m_rootState->activeRequest()->setActiveTab(Request::MainTab::Response);
 }
 
-void RequestEditor::on_sendButton_clicked()
+void RequestEditor::onSendButtonClicked()
 {
     qDebug() << "Send button clicked";
 
@@ -47,35 +56,46 @@ void RequestEditor::on_sendButton_clicked()
     ui->switchResponseButton->click();
 }
 
-void RequestEditor::on_urlEdit_returnPressed()
+void RequestEditor::onUrlEditReturnPressed()
 {
     ui->sendButton->click();
 }
 
-void RequestEditor::on_requestNameEdit_textEdited(const QString &name)
+void RequestEditor::onRequestNameEditTextEdited(const QString &name)
 {
     m_rootState->activeRequest()->setName(name);
 }
 
-void RequestEditor::on_urlEdit_textEdited(const QString &url)
+void RequestEditor::onUrlEditTextEdited(const QString &url)
 {
     m_rootState->activeRequest()->setUrl(url);
 }
 
-void RequestEditor::on_methodCombo_currentTextChanged(const QString &text)
+void RequestEditor::onMethodComboCurrentTextChanged(const QString &text)
 {
-    if (!m_rootState->activeRequest()) return;
+    if (!m_rootState->activeRequest() || text.isEmpty()) return;
     m_rootState->activeRequest()->setMethod(text);
 }
 
 void RequestEditor::bindRequest()
 {
+    QSignalBlocker block(ui->methodCombo);
+
     ui->methodCombo->clear();
     ui->methodCombo->addItems(m_defaultMethods);
 
     auto request = m_rootState->activeRequest();
 
     if (!request) return;
+
+    switch (request->activeTab()) {
+    case Request::MainTab::Request:
+        ui->switchRequestButton->click();
+        break;
+    case Request::MainTab::Response:
+        ui->switchResponseButton->click();
+        break;
+    }
 
     ui->urlEdit->setText(request->url());
     ui->requestNameEdit->setText(request->name());

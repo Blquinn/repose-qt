@@ -6,6 +6,8 @@
 #include <KTextEditor/Document>
 #include <KTextEditor/View>
 #include <KTextEditor/Editor>
+
+#include <src/models/rootstate.h>
 //#include <KTextEditor/EditorChooser>
 
 namespace Ui {
@@ -17,13 +19,18 @@ class RequestContainer : public QWidget
     Q_OBJECT
 
 public:
-    explicit RequestContainer(QWidget *parent = nullptr);
+    explicit RequestContainer(RootState *rootState, QWidget *parent = nullptr);
     ~RequestContainer();
 
 private slots:
-    void on_binaryBodyOpenDiagButton_clicked();
+    void onBinaryBodyOpenDiagButtonClicked();
+    void onParamTabViewCurrentIndexChanged();
+    void onBodyTabWidgetCurrentIndexChanged();
 
 private:
+    void onActiveRequestChanged();
+private:
+    RootState *m_rootState;
     Ui::RequestContainer *ui;
 
     KTextEditor::Editor *m_requestEditor;

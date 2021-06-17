@@ -14,6 +14,9 @@ namespace Ui {
 class ResponseContainer;
 }
 
+
+// TODO: Store response bodies in /tmp
+
 class ResponseContainer : public QWidget
 {
     Q_OBJECT
@@ -26,6 +29,7 @@ private slots:
     void onResponseReceived(ResponsePtr response);
 private:
     void bindRequest();
+    void bindResponse(ResponsePtr);
 private:
     Ui::ResponseContainer *ui;
     RootState *m_rootState;

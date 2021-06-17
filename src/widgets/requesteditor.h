@@ -23,16 +23,15 @@ public:
     ~RequestEditor();
 
 private slots:
-    void on_switchRequestButton_clicked(bool checked);
-    void on_switchResponseButton_clicked(bool checked);
-    void on_sendButton_clicked();
-    void on_urlEdit_returnPressed();
-    void on_requestNameEdit_textEdited(const QString &arg1);
-    void on_urlEdit_textEdited(const QString &arg1);
+    void onSwitchRequestButtonClicked(bool checked);
+    void onSwitchResponseButtonClicked(bool checked);
+    void onSendButtonClicked();
+    void onUrlEditReturnPressed();
+    void onRequestNameEditTextEdited(const QString &arg1);
+    void onUrlEditTextEdited(const QString &arg1);
+    void onMethodComboCurrentTextChanged(const QString &arg1);
 
     void bindRequest();
-    void on_methodCombo_currentTextChanged(const QString &arg1);
-
 private:
     Ui::RequestEditor *ui;
     RequestContainer *requestContainer;
