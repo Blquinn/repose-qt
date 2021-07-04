@@ -6,7 +6,7 @@ ParamTableModel::ParamTableModel(QObject *parent) : QAbstractTableModel(parent)
 }
 
 void ParamTableModel::addEmptyRow() {
-    beginInsertRows(QModelIndex(), m_paramList.length(), m_paramList.length()+1);
+    beginInsertRows(QModelIndex(), m_paramList.length(), m_paramList.length());
     m_paramList.append(ParamTableRow());
     endInsertRows();
 }
@@ -23,7 +23,7 @@ int ParamTableModel::columnCount(const QModelIndex &parent) const
 
 QVariant ParamTableModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || role != Qt::DisplayRole) return QVariant();
+    if (!index.isValid() || !(role == Qt::DisplayRole || role == Qt::EditRole)) return QVariant();
 
     if (index.row() >= m_paramList.size() || index.row() < 0) return QVariant();
 
@@ -68,14 +68,14 @@ bool ParamTableModel::setData(const QModelIndex &index, const QVariant &value, i
     emit dataChanged(index, index, {Qt::DisplayRole, Qt::EditRole});
 
     // TODO: Fix this inserting multiple empty rows.
-    if (index.row() != m_paramList.length() && param.isEmpty()) {
-        beginRemoveRows(index, index.row(), index.row()+1);
+    if (index.row() != m_paramList.length()-1 && param.isEmpty()) {
+        beginRemoveRows(QModelIndex(), index.row(), index.row());
         m_paramList.removeAt(index.row());
         endRemoveRows();
+        return true;
     }
 
-    if (m_paramList.empty() || !m_paramList.last().isEmpty())
-        addEmptyRow();
+    if (!m_paramList.last().isEmpty()) addEmptyRow();
 
     return true;
 }
@@ -98,29 +98,29 @@ QVariant ParamTableModel::headerData(int section, Qt::Orientation orientation, i
     }
 }
 
-bool ParamTableModel::insertRows(int position, int rows, const QModelIndex &index)
-{
-    Q_UNUSED(index);
-    beginInsertRows(QModelIndex(), position, position + rows - 1);
+//bool ParamTableModel::insertRows(int position, int rows, const QModelIndex &index)
+//{
+//    Q_UNUSED(index);
+//    beginInsertRows(QModelIndex(), position, position + rows - 1);
 
-    for (int row = 0; row < rows; ++row)
-        m_paramList.insert(position, ParamTableRow());
+//    for (int row = 0; row < rows; ++row)
+//        m_paramList.insert(position, ParamTableRow());
 
-    endInsertRows();
-    return true;
-}
+//    endInsertRows();
+//    return true;
+//}
 
-bool ParamTableModel::removeRows(int position, int rows, const QModelIndex &index)
-{
-    Q_UNUSED(index);
-    beginRemoveRows(QModelIndex(), position, position + rows - 1);
+//bool ParamTableModel::removeRows(int position, int rows, const QModelIndex &index)
+//{
+//    Q_UNUSED(index);
+//    beginRemoveRows(QModelIndex(), position, position + rows - 1);
 
-    for (int row = 0; row < rows; ++row)
-        m_paramList.removeAt(position);
+//    for (int row = 0; row < rows; ++row)
+//        m_paramList.removeAt(position);
 
-    endRemoveRows();
-    return true;
-}
+//    endRemoveRows();
+//    return true;
+//}
 
 Qt::ItemFlags ParamTableModel::flags(const QModelIndex &index) const
 {

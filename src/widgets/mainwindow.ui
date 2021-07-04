@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Repose</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QTabBar::tab {
@@ -132,7 +132,7 @@
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="requestResponseContainer" native="true"/>
+          <widget class="QWidget" name="requestResponseContainer"/>
          </widget>
         </item>
        </layout>

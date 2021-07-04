@@ -1220,9 +1220,13 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="src/widgets/mainwindow.ui" line="14"/>
         <location filename="vendor/QDarkStyleSheet/qdarkstyle/example/ui/mw_menus.ui" line="14"/>
         <source>MainWindow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/widgets/mainwindow.ui" line="14"/>
+        <source>Repose</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1743,12 +1747,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/widgets/responsecontainer.ui" line="270"/>
+        <location filename="src/widgets/responsecontainer.ui" line="279"/>
         <source>Preview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/widgets/responsecontainer.ui" line="292"/>
+        <location filename="src/widgets/responsecontainer.ui" line="301"/>
         <source>about:blank</source>
         <translation type="unfinished"></translation>
     </message>
