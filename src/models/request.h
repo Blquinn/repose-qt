@@ -18,12 +18,17 @@ public:
     enum class MainTab { Request, Response };
     enum class RequestAttributeSection { Params, Headers, Body };
     enum class RequestBody { None, Raw, Form, UrlEncoded, Binary };
+    enum class ResponseAttributeType { Headers, Body };
+    enum class ResponseBodyType { Pretty, Raw, Preview };
 
     Q_OBJECT
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(QString url READ url WRITE setUrl NOTIFY urlChanged)
     Q_PROPERTY(QString method READ method WRITE setMethod NOTIFY methodChanged)
     Q_PROPERTY(QString body READ body WRITE setBody NOTIFY bodyChanged)
+    Q_PROPERTY(ParamTableModelPtr bodyForm READ bodyForm WRITE setBodyForm NOTIFY bodyFormChanged)
+    Q_PROPERTY(ParamTableModelPtr bodyUrlEncoded READ bodyUrlEncoded WRITE setBodyUrlEncoded NOTIFY bodyUrlEncodedChanged)
+    Q_PROPERTY(QString bodyBinary READ bodyBinary WRITE setBodyBinary NOTIFY bodyBinaryChanged)
     Q_PROPERTY(ParamTableModelPtr headers READ headers WRITE setHeaders NOTIFY headersChanged)
     Q_PROPERTY(ParamTableModelPtr params READ params WRITE setParams NOTIFY paramsChanged)
     Q_PROPERTY(ResponsePtr response READ response WRITE setResponse NOTIFY responseChanged)
@@ -31,6 +36,9 @@ public:
     Q_PROPERTY(MainTab activeTab READ activeTab WRITE setActiveTab NOTIFY activeTabChanged)
     Q_PROPERTY(RequestAttributeSection activeSection READ activeSection WRITE setActiveSection NOTIFY activeSectionChanged)
     Q_PROPERTY(RequestBody activeBody READ activeBody WRITE setActiveBody NOTIFY activeBodyChanged)
+    Q_PROPERTY(QString requestMode READ requestMode WRITE setRequestMode NOTIFY requestModeChanged)
+    Q_PROPERTY(ResponseAttributeType activeResponseAttribute READ activeResponseAttribute WRITE setActiveResponseAttribute NOTIFY activeResponseAttributeChanged)
+    Q_PROPERTY(ResponseBodyType activeResponseBodyType READ activeResponseBodyType WRITE setActiveResponseBodyType NOTIFY activeResponseBodyTypeChanged)
 public:
     explicit Request(QObject *parent = nullptr);
 
@@ -69,6 +77,24 @@ public:
     RequestBody activeBody() const;
     void setActiveBody(RequestBody newActiveBody);
 
+    ResponseAttributeType activeResponseAttribute() const;
+    void setActiveResponseAttribute(ResponseAttributeType newActiveResponseAttribute);
+
+    ResponseBodyType activeResponseBodyType() const;
+    void setActiveResponseBodyType(ResponseBodyType newActiveResponseBodyType);
+
+    const QString &requestMode() const;
+    void setRequestMode(const QString &newRequestMode);
+
+    ParamTableModelPtr bodyForm() const;
+    void setBodyForm(ParamTableModelPtr newBodyForm);
+
+    ParamTableModelPtr bodyUrlEncoded() const;
+    void setBodyUrlEncoded(ParamTableModelPtr newBodyUrlEncoded);
+
+    const QString &bodyBinary() const;
+    void setBodyBinary(const QString &newBodyBinary);
+
 signals:
     void nameChanged();
     void urlChanged();
@@ -80,10 +106,14 @@ signals:
     void responseChanged();
     void requestTimerChanged();
     void activeTabChanged();
-
     void activeSectionChanged();
-
     void activeBodyChanged();
+    void activeResponseAttributeChanged();
+    void activeResponseBodyTypeChanged();
+    void requestModeChanged();
+    void bodyFormChanged();
+    void bodyUrlEncodedChanged();
+    void bodyBinaryChanged();
 
 private:
     QString m_url;
@@ -97,6 +127,18 @@ private:
     MainTab m_activeTab;
     RequestAttributeSection m_activeSection;
     RequestBody m_activeBody;
+    ResponseAttributeType m_activeResponseAttribute;
+    ResponseBodyType m_activeResponseBodyType;
+    QString m_requestMode;
+
+    void updateContentType();
+    ParamTableModelPtr m_bodyForm;
+    ParamTableModelPtr m_bodyUrlEncoded;
+    QString m_bodyBinary;
+
+    void setContentTypeForBinaryBody();
+private slots:
+    void onUrlChanged();
 };
 
 typedef QSharedPointer<Request> RequestPtr;

@@ -15,3 +15,8 @@ ParamTable::~ParamTable()
 {
     delete ui;
 }
+
+void ParamTable::setModel(ParamTableModel *model)
+{
+    ui->tableView->setModel(model);
+}

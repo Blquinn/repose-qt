@@ -1,17 +1,50 @@
 #include "request.h"
 
+#include <QMimeDatabase>
+#include <QUrl>
+#include <QUrlQuery>
+#include <QDebug>
+
+#include "src/utils/defer.h"
+
 Request::Request(QObject *parent) : QObject(parent)
   , m_name("")
   , m_url("")
   , m_method("GET")
   , m_body("")
+  , m_requestMode("")
+  , m_bodyForm(new ParamTableModel())
+  , m_bodyUrlEncoded(new ParamTableModel())
+  , m_bodyBinary("")
   , m_requestTimer()
   , m_params(new ParamTableModel())
   , m_headers(new ParamTableModel())
   , m_activeTab(MainTab::Request)
   , m_activeSection(RequestAttributeSection::Params)
   , m_activeBody(RequestBody::None)
+  , m_activeResponseAttribute(ResponseAttributeType::Headers)
+  , m_activeResponseBodyType(ResponseBodyType::Pretty)
 {
+    m_params->addEmptyRow();
+    m_headers->addEmptyRow();
+    m_bodyForm->addEmptyRow();
+    m_bodyUrlEncoded->addEmptyRow();
+
+    QObject::connect(this, &Request::urlChanged, this, &Request::onUrlChanged);
+
+    QObject::connect(m_params.get(), &QAbstractItemModel::dataChanged, this, [&](){
+        auto query = m_params->urlEncode();
+
+        QUrl url(m_url);
+        url.setQuery(query);
+
+        auto newUrl = url.toString();
+        qDebug() << "Setting url to " << newUrl;
+
+        QObject::disconnect(this, &Request::urlChanged, this, &Request::onUrlChanged);
+        setUrl(newUrl);
+        QObject::connect(this, &Request::urlChanged, this, &Request::onUrlChanged);
+    });
 }
 
 const QString &Request::method() const
@@ -161,5 +194,144 @@ void Request::setActiveBody(RequestBody newActiveBody)
     if (m_activeBody == newActiveBody)
         return;
     m_activeBody = newActiveBody;
+
     emit activeBodyChanged();
+
+    updateContentType();
+}
+
+void Request::updateContentType()
+{
+    switch (m_activeBody) {
+    case Request::RequestBody::None:
+        m_headers->removeRowByKey("Content-Type");
+        break;
+    case Request::RequestBody::Raw:
+        // Set based on raw body mime type.
+        // TODO: Handle more modes.
+
+        if (m_requestMode == "Normal") {
+            m_headers->upsertRowByKey(ParamTableRow("Content-Type", "text/plain", ""));
+        } else if (m_requestMode == "JSON") {
+            m_headers->upsertRowByKey(ParamTableRow("Content-Type", "application/json", ""));
+        } else if (m_requestMode == "HTML") {
+            m_headers->upsertRowByKey(ParamTableRow("Content-Type", "text/html", ""));
+        } else if (m_requestMode == "JavaScript") {
+            m_headers->upsertRowByKey(ParamTableRow("Content-Type", "application/javascript", ""));
+        }
+
+        break;
+    case Request::RequestBody::Form:
+            m_headers->upsertRowByKey(ParamTableRow("Content-Type", "multipart/form-data", ""));
+        break;
+    case Request::RequestBody::UrlEncoded:
+            m_headers->upsertRowByKey(ParamTableRow("Content-Type", "application/x-www-form-urlencoded", ""));
+        break;
+    case Request::RequestBody::Binary:
+        setContentTypeForBinaryBody();
+        break;
+    }
+}
+
+void Request::setContentTypeForBinaryBody()
+{
+    QMimeDatabase mimeDb;
+    auto mimeType = mimeDb.mimeTypeForFile(m_bodyBinary);
+    if (mimeType.isValid()) {
+        m_headers->upsertRowByKey(ParamTableRow("Content-Type", mimeType.name(), ""));
+    } else {
+        m_headers->removeRowByKey("Content-Type");
+    }
+}
+
+void Request::onUrlChanged()
+{
+    QUrl url(m_url, QUrl::ParsingMode::StrictMode);
+    if (!url.isValid()) {
+        qDebug() << "User entered invalid url";
+        return;
+    }
+
+    QUrlQuery query(url.query());
+    m_params->updateFromQuery(query.queryItems());
+}
+
+Request::ResponseAttributeType Request::activeResponseAttribute() const
+{
+    return m_activeResponseAttribute;
+}
+
+void Request::setActiveResponseAttribute(ResponseAttributeType newActiveResponseAttribute)
+{
+    if (m_activeResponseAttribute == newActiveResponseAttribute)
+        return;
+    m_activeResponseAttribute = newActiveResponseAttribute;
+    emit activeResponseAttributeChanged();
+}
+
+Request::ResponseBodyType Request::activeResponseBodyType() const
+{
+    return m_activeResponseBodyType;
+}
+
+void Request::setActiveResponseBodyType(ResponseBodyType newActiveResponseBodyType)
+{
+    if (m_activeResponseBodyType == newActiveResponseBodyType)
+        return;
+    m_activeResponseBodyType = newActiveResponseBodyType;
+    emit activeResponseBodyTypeChanged();
+}
+
+const QString &Request::requestMode() const
+{
+    return m_requestMode;
+}
+
+void Request::setRequestMode(const QString &newRequestMode)
+{
+    if (m_requestMode == newRequestMode)
+        return;
+    m_requestMode = newRequestMode;
+    emit requestModeChanged();
+    updateContentType();
+}
+
+ParamTableModelPtr Request::bodyForm() const
+{
+    return m_bodyForm;
+}
+
+void Request::setBodyForm(ParamTableModelPtr newBodyForm)
+{
+    if (m_bodyForm == newBodyForm)
+        return;
+    m_bodyForm = newBodyForm;
+    emit bodyFormChanged();
+}
+
+ParamTableModelPtr Request::bodyUrlEncoded() const
+{
+    return m_bodyUrlEncoded;
+}
+
+void Request::setBodyUrlEncoded(ParamTableModelPtr newBodyUrlEncoded)
+{
+    if (m_bodyUrlEncoded == newBodyUrlEncoded)
+        return;
+    m_bodyUrlEncoded = newBodyUrlEncoded;
+    emit bodyUrlEncodedChanged();
+}
+
+const QString &Request::bodyBinary() const
+{
+    return m_bodyBinary;
+}
+
+void Request::setBodyBinary(const QString &newBodyBinary)
+{
+    if (m_bodyBinary == newBodyBinary)
+        return;
+    m_bodyBinary = newBodyBinary;
+    emit bodyBinaryChanged();
+    setContentTypeForBinaryBody();
 }

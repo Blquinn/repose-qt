@@ -46,6 +46,7 @@ set(PROJECT_SOURCES
         src/services/httpclient.h       src/services/httpclient.cpp
         src/utils/mimemapper.h          src/utils/mimemapper.cpp
         src/utils/humanize.h            src/utils/humanize.cpp
+        src/utils/defer.h
         vendor/QtWaitingSpinner/waitingspinnerwidget.h vendor/QtWaitingSpinner/waitingspinnerwidget.cpp
         vendor/hexdump/Hexdump.hpp
         ${TS_FILES}

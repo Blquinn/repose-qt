@@ -5,6 +5,7 @@
 #include "paramtable.h"
 
 #include <QFileDialog>
+#include <QUrlQuery>
 
 void RequestContainer::onBodyTabWidgetCurrentIndexChanged()
 {
@@ -35,6 +36,13 @@ RequestContainer::RequestContainer(RootState *rootState, QWidget *parent) :
     QWidget(parent)
     , ui(new Ui::RequestContainer)
     , m_rootState(rootState)
+    , m_requestEditor(nullptr)
+    , m_requestEditorDocument(nullptr)
+    , m_requestEditorView(nullptr)
+    , m_paramsTable(nullptr)
+    , m_headersTable(nullptr)
+    , m_formDataTable(nullptr)
+    , m_formUrlTable(nullptr)
 {
     ui->setupUi(this);
 
@@ -53,39 +61,43 @@ RequestContainer::RequestContainer(RootState *rootState, QWidget *parent) :
     paramTableLayout->setMargin(0);
     paramTableLayout->setSpacing(0);
     ui->paramsTab->setLayout(paramTableLayout);
-    auto pt = new ParamTable(this);
-    paramTableLayout->addWidget(pt);
+    m_paramsTable = new ParamTable(this);
+    paramTableLayout->addWidget(m_paramsTable);
 
     auto headerTableLayout = new QVBoxLayout(this);
     headerTableLayout->setMargin(0);
     headerTableLayout->setSpacing(0);
     ui->headersTab->setLayout(headerTableLayout);
-    auto ht = new ParamTable(this);
-    headerTableLayout->addWidget(ht);
+    m_headersTable = new ParamTable(this);
+    headerTableLayout->addWidget(m_headersTable);
 
     auto formDataTableLayout = new QVBoxLayout(this);
     formDataTableLayout->setMargin(0);
     formDataTableLayout->setSpacing(0);
     ui->bodyFormData->setLayout(formDataTableLayout);
-    auto ft = new ParamTable(this);
-    formDataTableLayout->addWidget(ft);
+    m_formDataTable = new ParamTable(this);
+    formDataTableLayout->addWidget(m_formDataTable);
 
     auto urlEncodedTableLayout = new QVBoxLayout(this);
     urlEncodedTableLayout->setMargin(0);
     urlEncodedTableLayout->setSpacing(0);
     ui->bodyFormUrlEncoded->setLayout(urlEncodedTableLayout);
-    auto ut = new ParamTable(this);
-    urlEncodedTableLayout->addWidget(ut);
+    m_formUrlTable = new ParamTable(this);
+    urlEncodedTableLayout->addWidget(m_formUrlTable);
 
     // Bindings
 
-    connect(m_rootState, &RootState::activeRequestChanged, this, [=]() {
+    QObject::connect(m_rootState, &RootState::activeRequestChanged, this, [=]() {
         onActiveRequestChanged();
     });
 
-    connect(ui->binaryBodyOpenDiagButton, &QPushButton::clicked, this, &RequestContainer::onBinaryBodyOpenDiagButtonClicked);
-    connect(ui->paramsTabView, &QTabWidget::currentChanged, this, &RequestContainer::onParamTabViewCurrentIndexChanged);
-    connect(ui->bodyTabWidget, &QTabWidget::currentChanged, this, &RequestContainer::onBodyTabWidgetCurrentIndexChanged);
+    QObject::connect(ui->binaryBodyOpenDiagButton, &QPushButton::clicked, this, &RequestContainer::onBinaryBodyOpenDiagButtonClicked);
+    QObject::connect(ui->paramsTabView, &QTabWidget::currentChanged, this, &RequestContainer::onParamTabViewCurrentIndexChanged);
+    QObject::connect(ui->bodyTabWidget, &QTabWidget::currentChanged, this, &RequestContainer::onBodyTabWidgetCurrentIndexChanged);
+
+    QObject::connect(m_requestEditorDocument, &KTextEditor::Document::modeChanged, this, [&](KTextEditor::Document *doc) {
+        m_rootState->activeRequest()->setRequestMode(m_requestEditorDocument->mode());
+    });
 }
 
 RequestContainer::~RequestContainer()
@@ -93,11 +105,21 @@ RequestContainer::~RequestContainer()
     delete ui;
 }
 
+void RequestContainer::onBinaryBodyChanged()
+{
+    auto file = m_rootState->activeRequest()->bodyBinary();
+    if (file.isEmpty()) {
+        ui->binaryBodyLabel->setText(QString("No file has been selected."));
+    } else {
+        ui->binaryBodyLabel->setText(QString("You opened %1").arg(file));
+    }
+}
+
 void RequestContainer::onBinaryBodyOpenDiagButtonClicked()
 {
     QFileDialog diag;
     auto file = diag.getOpenFileName();
-    ui->binaryBodyLabel->setText(QString("You opened %1").arg(file));
+    m_rootState->activeRequest()->setBodyBinary(file);
 }
 
 void RequestContainer::onActiveRequestChanged()
@@ -136,6 +158,13 @@ void RequestContainer::onActiveRequestChanged()
     }
 
     m_requestEditorDocument->setText(req->body());
+
+    m_paramsTable->setModel(req->params().get());
+    m_headersTable->setModel(req->headers().get());
+    m_formDataTable->setModel(req->bodyForm().get());
+    m_formUrlTable->setModel(req->bodyUrlEncoded().get());
+    onBinaryBodyChanged();
+    QObject::connect(req.get(), &Request::bodyBinaryChanged, this, &RequestContainer::onBinaryBodyChanged);
 }
 
 void RequestContainer::onParamTabViewCurrentIndexChanged()

@@ -10,6 +10,11 @@
 #include "requestcontainer.h"
 #include "responsecontainer.h"
 
+static const QStringList DEFAULT_METHODS = {
+    "GET", "POST", "PUT", "PATCH", "DELETE",
+    "CONNECT", "OPTIONS", "TRACE",
+};
+
 namespace Ui {
 class RequestEditor;
 }
@@ -28,14 +33,14 @@ private slots:
     void onSendButtonClicked();
     void onUrlEditReturnPressed();
     void onRequestNameEditTextEdited(const QString &arg1);
-    void onUrlEditTextEdited(const QString &arg1);
     void onMethodComboCurrentTextChanged(const QString &arg1);
+    void onUrlEditEditingFinished();
 
     void bindRequest();
 private:
     Ui::RequestEditor *ui;
-    RequestContainer *requestContainer;
-    ResponseContainer *responseContainer;
+    RequestContainer *m_requestContainer;
+    ResponseContainer *m_responseContainer;
 
     HttpClient *m_httpClient;
     RootState *m_rootState;

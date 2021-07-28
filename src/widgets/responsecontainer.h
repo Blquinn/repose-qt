@@ -24,7 +24,6 @@ class ResponseContainer : public QWidget
 public:
     explicit ResponseContainer(RootState *rootState, HttpClient *httpClient, QWidget *parent = nullptr);
     ~ResponseContainer();
-
 private slots:
     void onResponseReceived(ResponsePtr response);
 private:

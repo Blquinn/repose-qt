@@ -1,6 +1,8 @@
 #ifndef REQUESTCONTAINER_H
 #define REQUESTCONTAINER_H
 
+#include "paramtable.h"
+
 #include <QWidget>
 
 #include <KTextEditor/Document>
@@ -22,11 +24,12 @@ public:
     explicit RequestContainer(RootState *rootState, QWidget *parent = nullptr);
     ~RequestContainer();
 
+    QString body() { return m_requestEditorDocument->text(); }
 private slots:
     void onBinaryBodyOpenDiagButtonClicked();
     void onParamTabViewCurrentIndexChanged();
     void onBodyTabWidgetCurrentIndexChanged();
-
+    void onBinaryBodyChanged();
 private:
     void onActiveRequestChanged();
 private:
@@ -36,6 +39,10 @@ private:
     KTextEditor::Editor *m_requestEditor;
     KTextEditor::Document *m_requestEditorDocument;
     KTextEditor::View *m_requestEditorView;
+    ParamTable *m_paramsTable;
+    ParamTable *m_headersTable;
+    ParamTable *m_formDataTable;
+    ParamTable *m_formUrlTable;
 };
 
 #endif // REQUESTCONTAINER_H

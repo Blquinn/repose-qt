@@ -53,8 +53,8 @@ MainWindow::MainWindow(QWidget *parent)
     tabBarLayout->setMargin(0);
     ui->tabBarContainer->setLayout(tabBarLayout);
 
-    connect(actionShowSideBar, &QAction::toggled, this, &MainWindow::on_actionShow_Sidebar_toggled);
-    connect(actionNewRequest, &QAction::triggered, this, &MainWindow::on_actionNew_Request_triggered);
+    connect(actionShowSideBar, &QAction::toggled, this, &MainWindow::onShowSidebarToggled);
+    connect(actionNewRequest, &QAction::triggered, this, &MainWindow::onNewRequestTriggered);
 
     actionShowSideBar->toggle();
 
@@ -115,7 +115,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_actionNew_Request_triggered()
+void MainWindow::onNewRequestTriggered()
 {
     qDebug() << "New request button pressed.";
 
@@ -150,7 +150,7 @@ QToolBar* MainWindow::buildToolBar()
     return tb;
 }
 
-void MainWindow::on_actionShow_Sidebar_toggled(bool toggled)
+void MainWindow::onShowSidebarToggled(bool toggled)
 {
     if (actionShowSideBar->isChecked() && m_requestListPreviousWidth == 0) {
         auto reWidth = ui->requestResponseContainer->width();
@@ -168,7 +168,7 @@ void MainWindow::on_actionShow_Sidebar_toggled(bool toggled)
     m_requestListPreviousWidth = toggled ? 0 : currentWidth;
 }
 
-void MainWindow::on_splitter_splitterMoved(int pos, int index)
+void MainWindow::onSplitterMoved(int pos, int index)
 {
     if (index != 1) return;
 

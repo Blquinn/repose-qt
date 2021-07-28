@@ -172,7 +172,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QTabWidget" name="tabWidget">
+    <widget class="QTabWidget" name="attributeTabs">
      <property name="currentIndex">
       <number>1</number>
      </property>
@@ -222,7 +222,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QTabWidget" name="tabWidget_2">
+        <widget class="QTabWidget" name="bodyTabs">
          <property name="tabPosition">
           <enum>QTabWidget::South</enum>
          </property>

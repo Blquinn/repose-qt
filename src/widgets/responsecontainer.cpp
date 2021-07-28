@@ -5,10 +5,12 @@
 
 #include "src/utils/mimemapper.h"
 #include "src/models/response.h"
+#include "src/models/request.h"
 #include "vendor/hexdump/Hexdump.hpp"
 #include "src/utils/humanize.h"
 
 #include <QBuffer>
+#include <QWeakPointer>
 
 ResponseContainer::ResponseContainer(RootState *rootState, HttpClient *httpClient, QWidget *parent) : QWidget(parent)
   , ui(new Ui::ResponseContainer)
@@ -38,8 +40,23 @@ ResponseContainer::ResponseContainer(RootState *rootState, HttpClient *httpClien
     prettyResponseLayout->addWidget(m_prettyResponseView);
 
     connect(m_httpClient, &HttpClient::responseReceived, this, &ResponseContainer::onResponseReceived);
+
     connect(m_rootState, &RootState::activeRequestChanged, this, [=]() {
         bindRequest();
+    });
+
+    connect(ui->attributeTabs, &QTabWidget::currentChanged, this, [=](int idx) {
+        auto req = m_rootState->activeRequest();
+        if (!req) return;
+
+        req->setActiveResponseAttribute((Request::ResponseAttributeType) idx);
+    });
+
+    connect(ui->bodyTabs, &QTabWidget::currentChanged, this, [=](int idx) {
+        auto req = m_rootState->activeRequest();
+        if (!req) return;
+
+        req->setActiveResponseBodyType((Request::ResponseBodyType) idx);
     });
 }
 
@@ -71,7 +88,10 @@ void ResponseContainer::bindRequest()
 {
     // Unbind current bindings.
     auto req = m_rootState->activeRequest();
-    if (req.isNull()) return;
+    if (!req) return;
+
+    ui->attributeTabs->setCurrentIndex((int) req->activeResponseAttribute());
+    ui->bodyTabs->setCurrentIndex((int) req->activeResponseBodyType());
 
     bindResponse(req->response());
 }

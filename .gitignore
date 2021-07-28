@@ -36,6 +36,8 @@ Thumbs.db
 /.qmake.stash
 CMakeLists.txt.user
 build/
+venv/
+__pycache__/
 
 # qtcreator generated files
 *.pro.user*

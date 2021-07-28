@@ -1220,11 +1220,6 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="vendor/QDarkStyleSheet/qdarkstyle/example/ui/mw_menus.ui" line="14"/>
-        <source>MainWindow</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="src/widgets/mainwindow.ui" line="14"/>
         <source>Repose</source>
         <translation type="unfinished"></translation>
@@ -1232,6 +1227,11 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="src/widgets/mainwindow.ui" line="120"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;No request has been selected.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Select a new request in the left hand panel, or create a new request with the button on the top right corner.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="vendor/QDarkStyleSheet/qdarkstyle/example/ui/mw_menus.ui" line="14"/>
+        <source>MainWindow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
