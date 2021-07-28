@@ -7,12 +7,14 @@
 HttpClient::HttpClient(QObject *parent) : QObject(parent)
   , m_networkManager(new QNetworkAccessManager(this))
 {
-    QObject::connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onResponseReceived(QNetworkReply*)));
+    QObject::connect(m_networkManager, &QNetworkAccessManager::finished, this, &HttpClient::onResponseReceived);
 }
 
 void HttpClient::initiateRequest(RequestPtr request)
 {
     qDebug() << "Initiating a request to " << request->url();
+
+    request->setLoading(true);
 
     QNetworkRequest nr;
     QElapsedTimer timer;
@@ -29,9 +31,7 @@ void HttpClient::initiateRequest(RequestPtr request)
         nr.setRawHeader(h.key().toUtf8(), h.value().toUtf8());
     }
 
-    auto url = request->url();
-
-    nr.setUrl(url);
+    nr.setUrl(request->url());
 
     // We may need to switch to the qiodevice api when we support binary file uploads.
     QIODevice *body = nullptr;
@@ -74,18 +74,20 @@ void HttpClient::initiateRequest(RequestPtr request)
         }
     }
 
-    m_networkManager->sendCustomRequest(nr, request->method().toUtf8(), body);
+    request->setNetworkReply(m_networkManager->sendCustomRequest(nr, request->method().toUtf8(), body));
 }
 
 // TODO: Store responses in /tmp file system
 void HttpClient::onResponseReceived(QNetworkReply *reply)
 {
+
     auto v = reply->request().attribute(QNetworkRequest::User);
     auto req = v.value<RequestPtr>();
+
+    req->setLoading(false);
+
     ResponsePtr res(new Response(req.toWeakRef(), req.get()));
     res->setResponseTime(req->requestTimer().nsecsElapsed());
-
-//    reply->attribute(QNetworkRequest::Attribute::)
 
     // Show content based errors.
     if (reply->error() >= QNetworkReply::ConnectionRefusedError &&

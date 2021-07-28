@@ -27,31 +27,27 @@ MainWindow::MainWindow(QWidget *parent)
     addToolBar(buildToolBar());
 
     requestTree = new RequestTree(ui->requestList);
-    auto requestListLayout = new QVBoxLayout(this);
+    auto requestListLayout = new QVBoxLayout(ui->requestList);
     requestListLayout->addWidget(requestTree);
     requestListLayout->setSpacing(0);
     requestListLayout->setMargin(0);
-    ui->requestList->setLayout(requestListLayout);
 
     requestEditor = new RequestEditor(m_rootState, ui->requestResponseContainer);
-    auto requestEditorLayout = new QVBoxLayout(this);
+    auto requestEditorLayout = new QVBoxLayout(ui->requestResponseContainer);
     requestEditorLayout->setSpacing(0);
     requestEditorLayout->setMargin(0);
     requestEditorLayout->setContentsMargins(0, 0, 5, 5);
     requestEditorLayout->addWidget(requestEditor);
-    ui->requestResponseContainer->setLayout(requestEditorLayout);
 
-    auto tabBarLayout = new QVBoxLayout(this);
+    auto tabBarLayout = new QVBoxLayout(ui->tabBarContainer);
     auto m_requestTabs = new QTabBar(this);
     // TODO: Allow moving of tabs
     // m_requestTabs->setMovable(true);
     m_requestTabs->setTabsClosable(true);
     m_requestTabs->setExpanding(false);
     m_requestTabs->setElideMode(Qt::ElideRight);
-//    m_requestTabs->set
     tabBarLayout->addWidget(m_requestTabs);
     tabBarLayout->setMargin(0);
-    ui->tabBarContainer->setLayout(tabBarLayout);
 
     connect(actionShowSideBar, &QAction::toggled, this, &MainWindow::onShowSidebarToggled);
     connect(actionNewRequest, &QAction::triggered, this, &MainWindow::onNewRequestTriggered);

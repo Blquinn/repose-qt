@@ -7,6 +7,8 @@
 #include <src/models/rootstate.h>
 #include <src/models/request.h>
 
+#include "vendor/QtWaitingSpinner/waitingspinnerwidget.h"
+
 #include "requestcontainer.h"
 #include "responsecontainer.h"
 
@@ -41,6 +43,7 @@ private:
     Ui::RequestEditor *ui;
     RequestContainer *m_requestContainer;
     ResponseContainer *m_responseContainer;
+    WaitingSpinnerWidget *m_responseLoadingSpinner;
 
     HttpClient *m_httpClient;
     RootState *m_rootState;

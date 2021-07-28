@@ -5,6 +5,7 @@
 #include <QDateTime>
 #include <QSharedPointer>
 #include <QElapsedTimer>
+#include <QNetworkReply>
 #include "paramtablemodel.h"
 #include "response.h"
 
@@ -39,6 +40,8 @@ public:
     Q_PROPERTY(QString requestMode READ requestMode WRITE setRequestMode NOTIFY requestModeChanged)
     Q_PROPERTY(ResponseAttributeType activeResponseAttribute READ activeResponseAttribute WRITE setActiveResponseAttribute NOTIFY activeResponseAttributeChanged)
     Q_PROPERTY(ResponseBodyType activeResponseBodyType READ activeResponseBodyType WRITE setActiveResponseBodyType NOTIFY activeResponseBodyTypeChanged)
+    Q_PROPERTY(bool loading READ loading WRITE setLoading NOTIFY loadingChanged)
+    Q_PROPERTY(QNetworkReply *networkReply READ networkReply WRITE setNetworkReply NOTIFY networkReplyChanged)
 public:
     explicit Request(QObject *parent = nullptr);
 
@@ -95,6 +98,12 @@ public:
     const QString &bodyBinary() const;
     void setBodyBinary(const QString &newBodyBinary);
 
+    bool loading() const;
+    void setLoading(bool newLoading);
+
+    QNetworkReply *networkReply() const;
+    void setNetworkReply(QNetworkReply *newNetworkReply);
+
 signals:
     void nameChanged();
     void urlChanged();
@@ -114,6 +123,10 @@ signals:
     void bodyFormChanged();
     void bodyUrlEncodedChanged();
     void bodyBinaryChanged();
+
+    void loadingChanged();
+
+    void networkReplyChanged();
 
 private:
     QString m_url;
@@ -137,6 +150,10 @@ private:
     QString m_bodyBinary;
 
     void setContentTypeForBinaryBody();
+    bool m_loading;
+
+    QNetworkReply *m_networkReply;
+
 private slots:
     void onUrlChanged();
 };

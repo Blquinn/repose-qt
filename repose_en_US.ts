@@ -1565,12 +1565,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/widgets/mainwindow.cpp" line="134"/>
+        <location filename="src/widgets/mainwindow.cpp" line="130"/>
         <source>Show side panel.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/widgets/mainwindow.cpp" line="146"/>
+        <location filename="src/widgets/mainwindow.cpp" line="142"/>
         <source>New Request.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1686,6 +1686,11 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="src/widgets/requesteditor.ui" line="158"/>
         <source>Response</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/widgets/requesteditor.ui" line="261"/>
+        <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

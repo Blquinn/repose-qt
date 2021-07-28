@@ -9,8 +9,10 @@ RequestEditor::RequestEditor(RootState *rootState, QWidget *parent) : QWidget(pa
     , m_httpClient(new HttpClient)
     , m_rootState(rootState)
     , m_defaultMethods(DEFAULT_METHODS)
+    , m_responseLoadingSpinner(nullptr)
 {
     ui->setupUi(this);
+    m_responseLoadingSpinner = new WaitingSpinnerWidget(ui->responseLoaderWrap, true, false);
 
     // TODO: Re-set this whenever a request is changed.
     // Store the extra ones on a per-request basis.
@@ -18,8 +20,33 @@ RequestEditor::RequestEditor(RootState *rootState, QWidget *parent) : QWidget(pa
 
     m_requestContainer = new RequestContainer(m_rootState, this);
     m_responseContainer = new ResponseContainer(rootState, m_httpClient, this);
-    ui->requestResponseStack->addWidget(m_requestContainer);
-    ui->requestResponseStack->addWidget(m_responseContainer);
+
+    auto requestContainerLayout = new QVBoxLayout(ui->requestContainerWrapper);
+    requestContainerLayout->setMargin(0);
+    requestContainerLayout->addWidget(m_requestContainer);
+
+    auto responseContainerLayout = new QVBoxLayout(ui->responseContainerInnerWrap);
+    responseContainerLayout->setMargin(0);
+    responseContainerLayout->addWidget(m_responseContainer);
+
+    m_responseLoadingSpinner->setRoundness(70.0);
+    m_responseLoadingSpinner->setMinimumTrailOpacity(15.0);
+    m_responseLoadingSpinner->setTrailFadePercentage(70.0);
+    m_responseLoadingSpinner->setNumberOfLines(12);
+    m_responseLoadingSpinner->setLineLength(10);
+    m_responseLoadingSpinner->setLineWidth(5);
+    m_responseLoadingSpinner->setInnerRadius(10);
+    m_responseLoadingSpinner->setRevolutionsPerSecond(1);
+    m_responseLoadingSpinner->start();
+    ui->responseLoaderStack->setCurrentIndex(1);
+
+    QObject::connect(ui->cancelRequestButton, &QPushButton::clicked, this, [this]() {
+        auto req = m_rootState->activeRequest();
+        if (!req) return;
+
+        auto rep = req->networkReply();
+        if (req && rep->isRunning()) rep->abort();
+    });
 
     QObject::connect(m_rootState, &RootState::activeRequestChanged, this, &RequestEditor::bindRequest);
     QObject::connect(ui->switchRequestButton, &QPushButton::clicked, this, &RequestEditor::onSwitchRequestButtonClicked);
@@ -38,13 +65,14 @@ RequestEditor::~RequestEditor()
 
 void RequestEditor::onSwitchRequestButtonClicked(bool checked)
 {
-    ui->requestResponseStack->setCurrentWidget(m_requestContainer);
+    ui->requestResponseStack->setCurrentIndex(0);
     m_rootState->activeRequest()->setActiveTab(Request::MainTab::Request);
 }
 
 void RequestEditor::onSwitchResponseButtonClicked(bool checked)
 {
-    ui->requestResponseStack->setCurrentWidget(m_responseContainer);
+//    ui->requestResponseStack->setCurrentWidget(m_responseContainer);
+    ui->requestResponseStack->setCurrentIndex(1);
     m_rootState->activeRequest()->setActiveTab(Request::MainTab::Response);
 }
 
@@ -107,8 +135,14 @@ void RequestEditor::bindRequest()
     ui->urlEdit->setText(request->url());
     ui->requestNameEdit->setText(request->name());
     ui->methodCombo->setCurrentText(request->method());
+    ui->responseLoaderStack->setCurrentIndex(request->loading() ? 0 : 1);
 
     QObject::connect(request.get(), &Request::urlChanged, this, [this, request]() {
         ui->urlEdit->setText(request->url());
+    });
+
+    QObject::connect(request.get(), &Request::loadingChanged, this, [this, request]() {
+        auto idx = request->loading() ? 0 : 1;
+        ui->responseLoaderStack->setCurrentIndex(idx);
     });
 }

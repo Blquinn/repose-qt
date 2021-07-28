@@ -24,19 +24,11 @@ ResponseContainer::ResponseContainer(RootState *rootState, HttpClient *httpClien
     m_prettyResponseView = m_prettyResponseDocument->createView(this);
     m_prettyResponseView->setContentsMargins(0, 0, 0, 0);
 
-    QFile f("/tmp/hm.txt");
-    f.open(QIODevice::OpenModeFlag::ReadWrite);
-    foreach (const auto &m, m_prettyResponseDocument->highlightingModes()) {
-        f.write((m + "\n").toUtf8());
-    }
-    f.close();
-
     m_prettyResponseDocument->setReadWrite(false);
 
-    auto prettyResponseLayout = new QVBoxLayout(this);
+    auto prettyResponseLayout = new QVBoxLayout(ui->responseBodyPrettyTab);
     prettyResponseLayout->setMargin(0);
     prettyResponseLayout->setSpacing(0);
-    ui->responseBodyPrettyTab->setLayout(prettyResponseLayout);
     prettyResponseLayout->addWidget(m_prettyResponseView);
 
     connect(m_httpClient, &HttpClient::responseReceived, this, &ResponseContainer::onResponseReceived);

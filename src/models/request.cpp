@@ -24,6 +24,8 @@ Request::Request(QObject *parent) : QObject(parent)
   , m_activeBody(RequestBody::None)
   , m_activeResponseAttribute(ResponseAttributeType::Headers)
   , m_activeResponseBodyType(ResponseBodyType::Pretty)
+  , m_loading(false)
+  , m_networkReply(nullptr)
 {
     m_params->addEmptyRow();
     m_headers->addEmptyRow();
@@ -334,4 +336,30 @@ void Request::setBodyBinary(const QString &newBodyBinary)
     m_bodyBinary = newBodyBinary;
     emit bodyBinaryChanged();
     setContentTypeForBinaryBody();
+}
+
+bool Request::loading() const
+{
+    return m_loading;
+}
+
+void Request::setLoading(bool newLoading)
+{
+    if (m_loading == newLoading)
+        return;
+    m_loading = newLoading;
+    emit loadingChanged();
+}
+
+QNetworkReply *Request::networkReply() const
+{
+    return m_networkReply;
+}
+
+void Request::setNetworkReply(QNetworkReply *newNetworkReply)
+{
+    if (m_networkReply == newNetworkReply)
+        return;
+    m_networkReply = newNetworkReply;
+    emit networkReplyChanged();
 }

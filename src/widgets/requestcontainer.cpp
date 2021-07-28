@@ -51,37 +51,32 @@ RequestContainer::RequestContainer(RootState *rootState, QWidget *parent) :
     m_requestEditorView = m_requestEditorDocument->createView(this);
     m_requestEditorView->setContentsMargins(0, 0, 0, 0);
 
-    auto requestEditorLayout = new QVBoxLayout(this);
+    auto requestEditorLayout = new QVBoxLayout(ui->bodyRaw);
     requestEditorLayout->setMargin(0);
     requestEditorLayout->setSpacing(0);
-    ui->bodyRaw->setLayout(requestEditorLayout);
     requestEditorLayout->addWidget(m_requestEditorView);
 
-    auto paramTableLayout = new QVBoxLayout(this);
+    auto paramTableLayout = new QVBoxLayout(ui->paramsTab);
     paramTableLayout->setMargin(0);
     paramTableLayout->setSpacing(0);
-    ui->paramsTab->setLayout(paramTableLayout);
     m_paramsTable = new ParamTable(this);
     paramTableLayout->addWidget(m_paramsTable);
 
-    auto headerTableLayout = new QVBoxLayout(this);
+    auto headerTableLayout = new QVBoxLayout(ui->headersTab);
     headerTableLayout->setMargin(0);
     headerTableLayout->setSpacing(0);
-    ui->headersTab->setLayout(headerTableLayout);
     m_headersTable = new ParamTable(this);
     headerTableLayout->addWidget(m_headersTable);
 
-    auto formDataTableLayout = new QVBoxLayout(this);
+    auto formDataTableLayout = new QVBoxLayout(ui->bodyFormData);
     formDataTableLayout->setMargin(0);
     formDataTableLayout->setSpacing(0);
-    ui->bodyFormData->setLayout(formDataTableLayout);
     m_formDataTable = new ParamTable(this);
     formDataTableLayout->addWidget(m_formDataTable);
 
-    auto urlEncodedTableLayout = new QVBoxLayout(this);
+    auto urlEncodedTableLayout = new QVBoxLayout(ui->bodyFormUrlEncoded);
     urlEncodedTableLayout->setMargin(0);
     urlEncodedTableLayout->setSpacing(0);
-    ui->bodyFormUrlEncoded->setLayout(urlEncodedTableLayout);
     m_formUrlTable = new ParamTable(this);
     urlEncodedTableLayout->addWidget(m_formUrlTable);
 
