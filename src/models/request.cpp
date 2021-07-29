@@ -1,31 +1,32 @@
 #include "request.h"
 
+#include <QDebug>
 #include <QMimeDatabase>
 #include <QUrl>
 #include <QUrlQuery>
-#include <QDebug>
 
 #include "src/utils/defer.h"
 
-Request::Request(QObject *parent) : QObject(parent)
-  , m_name("")
-  , m_url("")
-  , m_method("GET")
-  , m_body("")
-  , m_requestMode("")
-  , m_bodyForm(new ParamTableModel())
-  , m_bodyUrlEncoded(new ParamTableModel())
-  , m_bodyBinary("")
-  , m_requestTimer()
-  , m_params(new ParamTableModel())
-  , m_headers(new ParamTableModel())
-  , m_activeTab(MainTab::Request)
-  , m_activeSection(RequestAttributeSection::Params)
-  , m_activeBody(RequestBody::None)
-  , m_activeResponseAttribute(ResponseAttributeType::Headers)
-  , m_activeResponseBodyType(ResponseBodyType::Pretty)
-  , m_loading(false)
-  , m_networkReply(nullptr)
+Request::Request(QObject* parent)
+    : QObject(parent)
+    , m_name("")
+    , m_url("")
+    , m_method("GET")
+    , m_body("")
+    , m_requestMode("")
+    , m_bodyForm(new ParamTableModel())
+    , m_bodyUrlEncoded(new ParamTableModel())
+    , m_bodyBinary("")
+    , m_requestTimer()
+    , m_params(new ParamTableModel())
+    , m_headers(new ParamTableModel())
+    , m_activeTab(MainTab::Request)
+    , m_activeSection(RequestAttributeSection::Params)
+    , m_activeBody(RequestBody::None)
+    , m_activeResponseAttribute(ResponseAttributeType::Headers)
+    , m_activeResponseBodyType(ResponseBodyType::Pretty)
+    , m_loading(false)
+    , m_networkReply(nullptr)
 {
     m_params->addEmptyRow();
     m_headers->addEmptyRow();
@@ -34,44 +35,40 @@ Request::Request(QObject *parent) : QObject(parent)
 
     QObject::connect(this, &Request::urlChanged, this, &Request::onUrlChanged);
 
-    QObject::connect(m_params.get(), &QAbstractItemModel::dataChanged, this, [&](){
-        auto query = m_params->urlEncode();
+    QObject::connect(m_params.get(), &QAbstractItemModel::dataChanged, this,
+        [&]() {
+            auto query = m_params->urlEncode();
 
-        QUrl url(m_url);
-        url.setQuery(query);
+            QUrl url(m_url);
+            url.setQuery(query);
 
-        auto newUrl = url.toString();
-        qDebug() << "Setting url to " << newUrl;
+            auto newUrl = url.toString();
+            qDebug() << "Setting url to " << newUrl;
 
-        QObject::disconnect(this, &Request::urlChanged, this, &Request::onUrlChanged);
-        setUrl(newUrl);
-        QObject::connect(this, &Request::urlChanged, this, &Request::onUrlChanged);
-    });
+            QObject::disconnect(this, &Request::urlChanged, this,
+                &Request::onUrlChanged);
+            setUrl(newUrl);
+            QObject::connect(this, &Request::urlChanged, this,
+                &Request::onUrlChanged);
+        });
 }
 
-const QString &Request::method() const
-{
-    return m_method;
-}
+const QString& Request::method() const { return m_method; }
 
-const QString &Request::url() const
-{
-    return m_url;
-}
+const QString& Request::url() const { return m_url; }
 
-const QString &Request::name() const
-{
-    return m_name;
-}
+const QString& Request::name() const { return m_name; }
 
 const QString Request::displayName()
 {
-    if (m_name != "") return m_name;
-    if (m_url != "") return QString("%1 - %1").arg(m_method, m_url);
+    if (m_name != "")
+        return m_name;
+    if (m_url != "")
+        return QString("%1 - %1").arg(m_method, m_url);
     return "New Request";
 }
 
-void Request::setName(const QString &newName)
+void Request::setName(const QString& newName)
 {
     if (m_name == newName)
         return;
@@ -79,7 +76,7 @@ void Request::setName(const QString &newName)
     emit nameChanged();
 }
 
-void Request::setUrl(const QString &newUrl)
+void Request::setUrl(const QString& newUrl)
 {
     if (m_url == newUrl)
         return;
@@ -87,7 +84,7 @@ void Request::setUrl(const QString &newUrl)
     emit urlChanged();
 }
 
-void Request::setMethod(const QString &newMethod)
+void Request::setMethod(const QString& newMethod)
 {
     if (m_method == newMethod)
         return;
@@ -95,12 +92,9 @@ void Request::setMethod(const QString &newMethod)
     emit methodChanged();
 }
 
-const QString &Request::body() const
-{
-    return m_body;
-}
+const QString& Request::body() const { return m_body; }
 
-void Request::setBody(const QString &newBody)
+void Request::setBody(const QString& newBody)
 {
     if (m_body == newBody)
         return;
@@ -108,10 +102,7 @@ void Request::setBody(const QString &newBody)
     emit bodyChanged();
 }
 
-ParamTableModelPtr Request::params() const
-{
-    return m_params;
-}
+ParamTableModelPtr Request::params() const { return m_params; }
 
 void Request::setParams(ParamTableModelPtr newParams)
 {
@@ -121,10 +112,7 @@ void Request::setParams(ParamTableModelPtr newParams)
     emit paramsChanged();
 }
 
-ParamTableModelPtr Request::headers() const
-{
-    return m_headers;
-}
+ParamTableModelPtr Request::headers() const { return m_headers; }
 
 void Request::setHeaders(ParamTableModelPtr newHeaders)
 {
@@ -134,10 +122,7 @@ void Request::setHeaders(ParamTableModelPtr newHeaders)
     emit headersChanged();
 }
 
-ResponsePtr Request::response() const
-{
-    return m_response;
-}
+ResponsePtr Request::response() const { return m_response; }
 
 void Request::setResponse(ResponsePtr newResponse)
 {
@@ -147,12 +132,9 @@ void Request::setResponse(ResponsePtr newResponse)
     emit responseChanged();
 }
 
-const QElapsedTimer &Request::requestTimer() const
-{
-    return m_requestTimer;
-}
+const QElapsedTimer& Request::requestTimer() const { return m_requestTimer; }
 
-void Request::setRequestTimer(const QElapsedTimer &newRequestTimer)
+void Request::setRequestTimer(const QElapsedTimer& newRequestTimer)
 {
     if (m_requestTimer == newRequestTimer)
         return;
@@ -160,10 +142,7 @@ void Request::setRequestTimer(const QElapsedTimer &newRequestTimer)
     emit requestTimerChanged();
 }
 
-Request::MainTab Request::activeTab() const
-{
-    return m_activeTab;
-}
+Request::MainTab Request::activeTab() const { return m_activeTab; }
 
 void Request::setActiveTab(MainTab newActiveTab)
 {
@@ -186,10 +165,7 @@ void Request::setActiveSection(RequestAttributeSection newActiveSection)
     emit activeSectionChanged();
 }
 
-Request::RequestBody Request::activeBody() const
-{
-    return m_activeBody;
-}
+Request::RequestBody Request::activeBody() const { return m_activeBody; }
 
 void Request::setActiveBody(RequestBody newActiveBody)
 {
@@ -212,22 +188,29 @@ void Request::updateContentType()
         // Set based on raw body mime type.
         // TODO: Handle more modes.
 
-        if (m_requestMode == "Normal") {
-            m_headers->upsertRowByKey(ParamTableRow("Content-Type", "text/plain", ""));
-        } else if (m_requestMode == "JSON") {
-            m_headers->upsertRowByKey(ParamTableRow("Content-Type", "application/json", ""));
-        } else if (m_requestMode == "HTML") {
+        if (m_requestMode == "Normal")
+            m_headers->upsertRowByKey(
+                ParamTableRow("Content-Type", "text/plain", ""));
+        else if (m_requestMode == "JSON")
+            m_headers->upsertRowByKey(
+                ParamTableRow("Content-Type", "application/json", ""));
+        else if (m_requestMode == "HTML")
             m_headers->upsertRowByKey(ParamTableRow("Content-Type", "text/html", ""));
-        } else if (m_requestMode == "JavaScript") {
-            m_headers->upsertRowByKey(ParamTableRow("Content-Type", "application/javascript", ""));
-        }
+        else if (m_requestMode == "JavaScript")
+            m_headers->upsertRowByKey(
+                ParamTableRow("Content-Type", "application/javascript", ""));
+        else if (m_requestMode.startsWith("XML"))
+            m_headers->upsertRowByKey(
+                ParamTableRow("Content-Type", "application/xml", ""));
 
         break;
     case Request::RequestBody::Form:
-            m_headers->upsertRowByKey(ParamTableRow("Content-Type", "multipart/form-data", ""));
+        m_headers->upsertRowByKey(
+            ParamTableRow("Content-Type", "multipart/form-data", ""));
         break;
     case Request::RequestBody::UrlEncoded:
-            m_headers->upsertRowByKey(ParamTableRow("Content-Type", "application/x-www-form-urlencoded", ""));
+        m_headers->upsertRowByKey(
+            ParamTableRow("Content-Type", "application/x-www-form-urlencoded", ""));
         break;
     case Request::RequestBody::Binary:
         setContentTypeForBinaryBody();
@@ -240,7 +223,8 @@ void Request::setContentTypeForBinaryBody()
     QMimeDatabase mimeDb;
     auto mimeType = mimeDb.mimeTypeForFile(m_bodyBinary);
     if (mimeType.isValid()) {
-        m_headers->upsertRowByKey(ParamTableRow("Content-Type", mimeType.name(), ""));
+        m_headers->upsertRowByKey(
+            ParamTableRow("Content-Type", mimeType.name(), ""));
     } else {
         m_headers->removeRowByKey("Content-Type");
     }
@@ -263,7 +247,8 @@ Request::ResponseAttributeType Request::activeResponseAttribute() const
     return m_activeResponseAttribute;
 }
 
-void Request::setActiveResponseAttribute(ResponseAttributeType newActiveResponseAttribute)
+void Request::setActiveResponseAttribute(
+    ResponseAttributeType newActiveResponseAttribute)
 {
     if (m_activeResponseAttribute == newActiveResponseAttribute)
         return;
@@ -276,7 +261,8 @@ Request::ResponseBodyType Request::activeResponseBodyType() const
     return m_activeResponseBodyType;
 }
 
-void Request::setActiveResponseBodyType(ResponseBodyType newActiveResponseBodyType)
+void Request::setActiveResponseBodyType(
+    ResponseBodyType newActiveResponseBodyType)
 {
     if (m_activeResponseBodyType == newActiveResponseBodyType)
         return;
@@ -284,12 +270,9 @@ void Request::setActiveResponseBodyType(ResponseBodyType newActiveResponseBodyTy
     emit activeResponseBodyTypeChanged();
 }
 
-const QString &Request::requestMode() const
-{
-    return m_requestMode;
-}
+const QString& Request::requestMode() const { return m_requestMode; }
 
-void Request::setRequestMode(const QString &newRequestMode)
+void Request::setRequestMode(const QString& newRequestMode)
 {
     if (m_requestMode == newRequestMode)
         return;
@@ -298,10 +281,7 @@ void Request::setRequestMode(const QString &newRequestMode)
     updateContentType();
 }
 
-ParamTableModelPtr Request::bodyForm() const
-{
-    return m_bodyForm;
-}
+ParamTableModelPtr Request::bodyForm() const { return m_bodyForm; }
 
 void Request::setBodyForm(ParamTableModelPtr newBodyForm)
 {
@@ -311,10 +291,7 @@ void Request::setBodyForm(ParamTableModelPtr newBodyForm)
     emit bodyFormChanged();
 }
 
-ParamTableModelPtr Request::bodyUrlEncoded() const
-{
-    return m_bodyUrlEncoded;
-}
+ParamTableModelPtr Request::bodyUrlEncoded() const { return m_bodyUrlEncoded; }
 
 void Request::setBodyUrlEncoded(ParamTableModelPtr newBodyUrlEncoded)
 {
@@ -324,12 +301,9 @@ void Request::setBodyUrlEncoded(ParamTableModelPtr newBodyUrlEncoded)
     emit bodyUrlEncodedChanged();
 }
 
-const QString &Request::bodyBinary() const
-{
-    return m_bodyBinary;
-}
+const QString& Request::bodyBinary() const { return m_bodyBinary; }
 
-void Request::setBodyBinary(const QString &newBodyBinary)
+void Request::setBodyBinary(const QString& newBodyBinary)
 {
     if (m_bodyBinary == newBodyBinary)
         return;
@@ -338,10 +312,7 @@ void Request::setBodyBinary(const QString &newBodyBinary)
     setContentTypeForBinaryBody();
 }
 
-bool Request::loading() const
-{
-    return m_loading;
-}
+bool Request::loading() const { return m_loading; }
 
 void Request::setLoading(bool newLoading)
 {
@@ -351,12 +322,9 @@ void Request::setLoading(bool newLoading)
     emit loadingChanged();
 }
 
-QNetworkReply *Request::networkReply() const
-{
-    return m_networkReply;
-}
+QNetworkReply* Request::networkReply() const { return m_networkReply; }
 
-void Request::setNetworkReply(QNetworkReply *newNetworkReply)
+void Request::setNetworkReply(QNetworkReply* newNetworkReply)
 {
     if (m_networkReply == newNetworkReply)
         return;

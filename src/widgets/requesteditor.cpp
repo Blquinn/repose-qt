@@ -4,7 +4,8 @@
 #include <QToolTip>
 #include <QUrlQuery>
 
-RequestEditor::RequestEditor(RootState *rootState, QWidget *parent) : QWidget(parent)
+RequestEditor::RequestEditor(RootState* rootState, QWidget* parent)
+    : QWidget(parent)
     , ui(new Ui::RequestEditor)
     , m_httpClient(new HttpClient)
     , m_rootState(rootState)
@@ -42,10 +43,12 @@ RequestEditor::RequestEditor(RootState *rootState, QWidget *parent) : QWidget(pa
 
     QObject::connect(ui->cancelRequestButton, &QPushButton::clicked, this, [this]() {
         auto req = m_rootState->activeRequest();
-        if (!req) return;
+        if (!req)
+            return;
 
         auto rep = req->networkReply();
-        if (req && rep->isRunning()) rep->abort();
+        if (req && rep->isRunning())
+            rep->abort();
     });
 
     QObject::connect(m_rootState, &RootState::activeRequestChanged, this, &RequestEditor::bindRequest);
@@ -71,7 +74,7 @@ void RequestEditor::onSwitchRequestButtonClicked(bool checked)
 
 void RequestEditor::onSwitchResponseButtonClicked(bool checked)
 {
-//    ui->requestResponseStack->setCurrentWidget(m_responseContainer);
+    //    ui->requestResponseStack->setCurrentWidget(m_responseContainer);
     ui->requestResponseStack->setCurrentIndex(1);
     m_rootState->activeRequest()->setActiveTab(Request::MainTab::Response);
 }
@@ -92,14 +95,15 @@ void RequestEditor::onUrlEditReturnPressed()
     ui->sendButton->click();
 }
 
-void RequestEditor::onRequestNameEditTextEdited(const QString &name)
+void RequestEditor::onRequestNameEditTextEdited(const QString& name)
 {
     m_rootState->activeRequest()->setName(name);
 }
 
-void RequestEditor::onMethodComboCurrentTextChanged(const QString &text)
+void RequestEditor::onMethodComboCurrentTextChanged(const QString& text)
 {
-    if (!m_rootState->activeRequest() || text.isEmpty()) return;
+    if (!m_rootState->activeRequest() || text.isEmpty())
+        return;
     m_rootState->activeRequest()->setMethod(text);
 }
 
@@ -121,7 +125,8 @@ void RequestEditor::bindRequest()
 
     auto request = m_rootState->activeRequest();
 
-    if (!request) return;
+    if (!request)
+        return;
 
     switch (request->activeTab()) {
     case Request::MainTab::Request:

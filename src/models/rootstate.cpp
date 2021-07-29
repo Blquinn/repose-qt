@@ -1,10 +1,10 @@
 #include "rootstate.h"
 
-RootState::RootState(QObject *parent) : QObject(parent)
-  , m_activeRequest(nullptr)
-  , m_requestList()
+RootState::RootState(QObject* parent)
+    : QObject(parent)
+    , m_activeRequest(nullptr)
+    , m_requestList()
 {
-
 }
 
 RequestPtr RootState::activeRequest() const
@@ -20,17 +20,18 @@ void RootState::setActiveRequest(RequestPtr newActiveRequest)
     emit activeRequestChanged();
 }
 
-const QList<RequestPtr> &RootState::requestList() const
+const QList<RequestPtr>& RootState::requestList() const
 {
     return m_requestList;
 }
 
 void RootState::addActiveRequest(RequestPtr req)
 {
-    if (m_requestList.contains(req)) return;
+    if (m_requestList.contains(req))
+        return;
 
     m_requestList.append(req);
-    emit requestListAdded(m_requestList.length()-1);
+    emit requestListAdded(m_requestList.length() - 1);
 }
 
 void RootState::removeFromRequestList(RequestPtr req)
@@ -40,7 +41,8 @@ void RootState::removeFromRequestList(RequestPtr req)
 
 void RootState::removeFromRequestList(int idx)
 {
-    if (idx < 0 || idx > m_requestList.length()-1) return;
+    if (idx < 0 || idx > m_requestList.length() - 1)
+        return;
 
     m_requestList.removeAt(idx);
     emit requestListRemoved(idx);

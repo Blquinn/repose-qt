@@ -6,15 +6,14 @@
 
 #include <QList>
 #include <QObject>
-#include <QWeakPointer>
 #include <QSharedPointer>
+#include <QWeakPointer>
 
 class Request;
 
 typedef QList<QPair<QString, QString>> HeaderList;
 
-class Response : public QObject
-{
+class Response : public QObject {
 public:
     Q_OBJECT
     Q_PROPERTY(QByteArray body READ body WRITE setBody NOTIFY bodyChanged)
@@ -24,26 +23,26 @@ public:
     Q_PROPERTY(int statusCode READ statusCode WRITE setStatusCode NOTIFY statusCodeChanged)
     Q_PROPERTY(QString statusLine READ statusLine WRITE setStatusLine NOTIFY statusLineChanged)
 public:
-    explicit Response(QWeakPointer<Request> request, QObject *parent = nullptr);
+    explicit Response(QWeakPointer<Request> request, QObject* parent = nullptr);
     ~Response();
 
-    const QByteArray &body() const;
-    void setBody(const QByteArray &newBody);
+    const QByteArray& body() const;
+    void setBody(const QByteArray& newBody);
 
-    const QString &contentType() const;
-    void setContentType(const QString &newContentType);
+    const QString& contentType() const;
+    void setContentType(const QString& newContentType);
 
-    const qint64 &responseTime() const;
-    void setResponseTime(const qint64 &newResponseTime);
+    const qint64& responseTime() const;
+    void setResponseTime(const qint64& newResponseTime);
 
-    const HeaderList &headers() const;
-    void setHeaders(const HeaderList &newHeaders);
+    const HeaderList& headers() const;
+    void setHeaders(const HeaderList& newHeaders);
 
     int statusCode() const;
     void setStatusCode(int newStatusCode);
 
-    const QString &statusLine() const;
-    void setStatusLine(const QString &newStatusLine);
+    const QString& statusLine() const;
+    void setStatusLine(const QString& newStatusLine);
 signals:
     void bodyChanged();
     void responseTimeChanged();
@@ -51,6 +50,7 @@ signals:
     void contentTypeChanged();
     void statusCodeChanged();
     void statusLineChanged();
+
 private:
     QWeakPointer<Request> m_request;
     QByteArray m_body;

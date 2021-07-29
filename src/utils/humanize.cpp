@@ -8,7 +8,8 @@ const qint64 sec = msec * 1000;
 const qint64 minute = sec * 60;
 const qint64 hour = minute * 60;
 
-QString Humanize::timeSpan(qint64 ns) {
+QString Humanize::timeSpan(qint64 ns)
+{
     if (ns > minute) {
         double d = ns;
         d /= minute;
@@ -41,7 +42,7 @@ double logn(double n, double b)
     return log(n) / log(b);
 }
 
-const QString sizes[] = {"B", "kB", "MB", "GB", "TB", "PB", "EB"};
+const QString sizes[] = { "B", "kB", "MB", "GB", "TB", "PB", "EB" };
 
 QString Humanize::bytes(size_t s)
 {
@@ -54,7 +55,7 @@ QString Humanize::bytes(size_t s)
     auto e = floor(logn(s, b));
     auto suffix = sizes[(int)e];
     auto pp = pow(b, e);
-    auto val = floor(s / pp*10+0.5) / 10;
+    auto val = floor(s / pp * 10 + 0.5) / 10;
     if (val < 10) {
         return QString("%1 %2").arg(val, 0, 'f', 1).arg(suffix);
     }

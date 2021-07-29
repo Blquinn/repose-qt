@@ -1,12 +1,13 @@
 #include "response.h"
 
-Response::Response(QWeakPointer<Request> request, QObject *parent) : QObject(parent)
-  , m_request(request)
-  , m_contentType("")
-  , m_headers()
-  , m_responseTime(0)
-  , m_statusCode(0)
-  , m_statusLine()
+Response::Response(QWeakPointer<Request> request, QObject* parent)
+    : QObject(parent)
+    , m_request(request)
+    , m_contentType("")
+    , m_headers()
+    , m_responseTime(0)
+    , m_statusCode(0)
+    , m_statusLine()
 {
 }
 
@@ -19,37 +20,37 @@ const QByteArray& Response::body() const
     return m_body;
 }
 
-void Response::setBody(const QByteArray &newBody)
+void Response::setBody(const QByteArray& newBody)
 {
     m_body = newBody;
 }
 
-const QString &Response::contentType() const
+const QString& Response::contentType() const
 {
     return m_contentType;
 }
 
-void Response::setContentType(const QString &newContentType)
+void Response::setContentType(const QString& newContentType)
 {
     m_contentType = newContentType;
 }
 
-const qint64 &Response::responseTime() const
+const qint64& Response::responseTime() const
 {
     return m_responseTime;
 }
 
-void Response::setResponseTime(const qint64 &newResponseTime)
+void Response::setResponseTime(const qint64& newResponseTime)
 {
     m_responseTime = newResponseTime;
 }
 
-const QList<QPair<QString, QString>> &Response::headers() const
+const QList<QPair<QString, QString>>& Response::headers() const
 {
     return m_headers;
 }
 
-void Response::setHeaders(const QList<QPair<QString, QString> > &newHeaders)
+void Response::setHeaders(const QList<QPair<QString, QString>>& newHeaders)
 {
     m_headers = newHeaders;
 }
@@ -67,12 +68,12 @@ void Response::setStatusCode(int newStatusCode)
     emit statusCodeChanged();
 }
 
-const QString &Response::statusLine() const
+const QString& Response::statusLine() const
 {
     return m_statusLine;
 }
 
-void Response::setStatusLine(const QString &newStatusLine)
+void Response::setStatusLine(const QString& newStatusLine)
 {
     if (m_statusLine == newStatusLine)
         return;

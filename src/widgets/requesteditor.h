@@ -3,9 +3,9 @@
 
 #include <QWidget>
 
-#include <src/services/httpclient.h>
-#include <src/models/rootstate.h>
 #include <src/models/request.h>
+#include <src/models/rootstate.h>
+#include <src/services/httpclient.h>
 
 #include "vendor/QtWaitingSpinner/waitingspinnerwidget.h"
 
@@ -13,20 +13,25 @@
 #include "responsecontainer.h"
 
 static const QStringList DEFAULT_METHODS = {
-    "GET", "POST", "PUT", "PATCH", "DELETE",
-    "CONNECT", "OPTIONS", "TRACE",
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "CONNECT",
+    "OPTIONS",
+    "TRACE",
 };
 
 namespace Ui {
 class RequestEditor;
 }
 
-class RequestEditor : public QWidget
-{
+class RequestEditor : public QWidget {
     Q_OBJECT
 
 public:
-    explicit RequestEditor(RootState *rootState, QWidget *parent = nullptr);
+    explicit RequestEditor(RootState* rootState, QWidget* parent = nullptr);
     ~RequestEditor();
 
 private slots:
@@ -34,19 +39,20 @@ private slots:
     void onSwitchResponseButtonClicked(bool checked);
     void onSendButtonClicked();
     void onUrlEditReturnPressed();
-    void onRequestNameEditTextEdited(const QString &arg1);
-    void onMethodComboCurrentTextChanged(const QString &arg1);
+    void onRequestNameEditTextEdited(const QString& arg1);
+    void onMethodComboCurrentTextChanged(const QString& arg1);
     void onUrlEditEditingFinished();
 
     void bindRequest();
-private:
-    Ui::RequestEditor *ui;
-    RequestContainer *m_requestContainer;
-    ResponseContainer *m_responseContainer;
-    WaitingSpinnerWidget *m_responseLoadingSpinner;
 
-    HttpClient *m_httpClient;
-    RootState *m_rootState;
+private:
+    Ui::RequestEditor* ui;
+    RequestContainer* m_requestContainer;
+    ResponseContainer* m_responseContainer;
+    WaitingSpinnerWidget* m_responseLoadingSpinner;
+
+    HttpClient* m_httpClient;
+    RootState* m_rootState;
     QStringList m_defaultMethods;
 };
 

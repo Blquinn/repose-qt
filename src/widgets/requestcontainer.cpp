@@ -32,8 +32,8 @@ void RequestContainer::onBodyTabWidgetCurrentIndexChanged()
     m_rootState->activeRequest()->setActiveBody(bod);
 }
 
-RequestContainer::RequestContainer(RootState *rootState, QWidget *parent) :
-    QWidget(parent)
+RequestContainer::RequestContainer(RootState* rootState, QWidget* parent)
+    : QWidget(parent)
     , ui(new Ui::RequestContainer)
     , m_rootState(rootState)
     , m_requestEditor(nullptr)
@@ -90,7 +90,7 @@ RequestContainer::RequestContainer(RootState *rootState, QWidget *parent) :
     QObject::connect(ui->paramsTabView, &QTabWidget::currentChanged, this, &RequestContainer::onParamTabViewCurrentIndexChanged);
     QObject::connect(ui->bodyTabWidget, &QTabWidget::currentChanged, this, &RequestContainer::onBodyTabWidgetCurrentIndexChanged);
 
-    QObject::connect(m_requestEditorDocument, &KTextEditor::Document::modeChanged, this, [&](KTextEditor::Document *doc) {
+    QObject::connect(m_requestEditorDocument, &KTextEditor::Document::modeChanged, this, [&](KTextEditor::Document* doc) {
         m_rootState->activeRequest()->setRequestMode(m_requestEditorDocument->mode());
     });
 }
@@ -120,7 +120,8 @@ void RequestContainer::onBinaryBodyOpenDiagButtonClicked()
 void RequestContainer::onActiveRequestChanged()
 {
     auto req = m_rootState->activeRequest();
-    if (!req) return;
+    if (!req)
+        return;
 
     switch (req->activeSection()) {
     case Request::RequestAttributeSection::Params:

@@ -7,16 +7,15 @@ namespace Ui {
 class RequestTree;
 }
 
-class RequestTree : public QWidget
-{
+class RequestTree : public QWidget {
     Q_OBJECT
 
 public:
-    explicit RequestTree(QWidget *parent = nullptr);
+    explicit RequestTree(QWidget* parent = nullptr);
     ~RequestTree();
 
 private:
-    Ui::RequestTree *ui;
+    Ui::RequestTree* ui;
 };
 
 #endif // REQUESTTREE_H

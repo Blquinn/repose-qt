@@ -3,9 +3,9 @@
 
 #include <QFileSystemModel>
 
-RequestTree::RequestTree(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::RequestTree)
+RequestTree::RequestTree(QWidget* parent)
+    : QWidget(parent)
+    , ui(new Ui::RequestTree)
 {
     ui->setupUi(this);
     auto model = new QFileSystemModel();

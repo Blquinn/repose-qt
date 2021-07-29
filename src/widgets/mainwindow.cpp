@@ -1,21 +1,22 @@
 ﻿#include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
-#include "./requesttree.h"
 #include "./requesteditor.h"
+#include "./requesttree.h"
 
 #include <QIcon>
+#include <QMetaObject>
 #include <QSizePolicy>
 #include <QTabBar>
 #include <QToolBar>
 #include <QVBoxLayout>
-#include <QMetaObject>
 
-int getSideBarWidth(int editorWidth) {
+int getSideBarWidth(int editorWidth)
+{
     return editorWidth / 3;
 }
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , m_requestListPreviousWidth(0)
@@ -55,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent)
     actionShowSideBar->toggle();
 
     auto sbw = getSideBarWidth(width());
-    ui->splitter->setSizes({sbw, width()-sbw});
+    ui->splitter->setSizes({ sbw, width() - sbw });
     m_requestListPreviousWidth = ui->requestList->width();
 
     // Hide sidebar
@@ -80,9 +81,9 @@ MainWindow::MainWindow(QWidget *parent)
         m_rootState->removeFromRequestList(idx);
         // If the active req was deleted, try activating the one to the left if available,
         // otherwise the one to the right.
-        if (idx-1 >= 0) {
-            m_rootState->setActiveRequest(m_rootState->requestList()[idx-1]);
-        } else if (idx <= m_rootState->requestList().length()-1) {
+        if (idx - 1 >= 0) {
+            m_rootState->setActiveRequest(m_rootState->requestList()[idx - 1]);
+        } else if (idx <= m_rootState->requestList().length() - 1) {
             m_rootState->setActiveRequest(m_rootState->requestList()[idx]);
         } else {
             m_rootState->setActiveRequest(nullptr);
@@ -90,7 +91,8 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     connect(m_requestTabs, &QTabBar::currentChanged, this, [=](int idx) {
-        if (idx < 0 || m_rootState->requestList().isEmpty()) return;
+        if (idx < 0 || m_rootState->requestList().isEmpty())
+            return;
 
         m_rootState->setActiveRequest(m_rootState->requestList()[idx]);
     });
@@ -115,7 +117,7 @@ void MainWindow::onNewRequestTriggered()
 {
     qDebug() << "New request button pressed.";
 
-    RequestPtr req (new Request());
+    RequestPtr req(new Request());
     m_rootState->addActiveRequest(req);
     m_rootState->setActiveRequest(req);
 }
@@ -151,7 +153,7 @@ void MainWindow::onShowSidebarToggled(bool toggled)
     if (actionShowSideBar->isChecked() && m_requestListPreviousWidth == 0) {
         auto reWidth = ui->requestResponseContainer->width();
         auto newWidth = getSideBarWidth(reWidth);
-        ui->splitter->setSizes({newWidth, reWidth-newWidth});
+        ui->splitter->setSizes({ newWidth, reWidth - newWidth });
         return;
     }
 
@@ -159,14 +161,15 @@ void MainWindow::onShowSidebarToggled(bool toggled)
     int newWidth = toggled ? m_requestListPreviousWidth : 0;
 
     auto reWidth = ui->requestResponseContainer->width();
-    ui->splitter->setSizes({newWidth, reWidth-newWidth});
+    ui->splitter->setSizes({ newWidth, reWidth - newWidth });
 
     m_requestListPreviousWidth = toggled ? 0 : currentWidth;
 }
 
 void MainWindow::onSplitterMoved(int pos, int index)
 {
-    if (index != 1) return;
+    if (index != 1)
+        return;
 
     auto checked = actionShowSideBar->isChecked();
     auto check = pos != 0;

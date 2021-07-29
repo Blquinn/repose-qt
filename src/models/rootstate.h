@@ -6,17 +6,16 @@
 #include <QObject>
 #include <QSharedPointer>
 
-class RootState : public QObject
-{
+class RootState : public QObject {
     Q_OBJECT
     Q_PROPERTY(RequestPtr activeRequest READ activeRequest WRITE setActiveRequest NOTIFY activeRequestChanged)
 public:
-    explicit RootState(QObject *parent = nullptr);
+    explicit RootState(QObject* parent = nullptr);
 
     RequestPtr activeRequest() const;
     void setActiveRequest(RequestPtr newActiveRequest);
 
-    const QList<RequestPtr> &requestList() const;
+    const QList<RequestPtr>& requestList() const;
 
     void addActiveRequest(RequestPtr req);
     void removeFromRequestList(RequestPtr req);
@@ -26,6 +25,7 @@ signals:
     void activeRequestChanged();
     void requestListRemoved(int idx);
     void requestListAdded(int idx);
+
 private:
     RequestPtr m_activeRequest;
     QList<RequestPtr> m_requestList;

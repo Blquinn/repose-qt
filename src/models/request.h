@@ -1,26 +1,49 @@
 #ifndef REQUEST_H
 #define REQUEST_H
 
-#include <QObject>
-#include <QDateTime>
-#include <QSharedPointer>
-#include <QElapsedTimer>
-#include <QNetworkReply>
 #include "paramtablemodel.h"
 #include "response.h"
+#include <QDateTime>
+#include <QElapsedTimer>
+#include <QNetworkReply>
+#include <QObject>
+#include <QSharedPointer>
 
 class Response;
 
 typedef QSharedPointer<Response> ResponsePtr;
 
-class Request : public QObject
-{
+class Request : public QObject {
 public:
-    enum class MainTab { Request, Response };
-    enum class RequestAttributeSection { Params, Headers, Body };
-    enum class RequestBody { None, Raw, Form, UrlEncoded, Binary };
-    enum class ResponseAttributeType { Headers, Body };
-    enum class ResponseBodyType { Pretty, Raw, Preview };
+    enum class MainTab {
+        Request,
+        Response
+    };
+
+    enum class RequestAttributeSection {
+        Params,
+        Headers,
+        Body
+    };
+
+    enum class RequestBody {
+        None,
+        Raw,
+        Form,
+        UrlEncoded,
+        Binary
+    };
+
+    enum class ResponseAttributeType {
+        Headers,
+        Body
+    };
+
+    enum class ResponseBodyType {
+        Pretty,
+        Raw,
+        Preview
+    };
 
     Q_OBJECT
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
@@ -41,23 +64,23 @@ public:
     Q_PROPERTY(ResponseAttributeType activeResponseAttribute READ activeResponseAttribute WRITE setActiveResponseAttribute NOTIFY activeResponseAttributeChanged)
     Q_PROPERTY(ResponseBodyType activeResponseBodyType READ activeResponseBodyType WRITE setActiveResponseBodyType NOTIFY activeResponseBodyTypeChanged)
     Q_PROPERTY(bool loading READ loading WRITE setLoading NOTIFY loadingChanged)
-    Q_PROPERTY(QNetworkReply *networkReply READ networkReply WRITE setNetworkReply NOTIFY networkReplyChanged)
+    Q_PROPERTY(QNetworkReply* networkReply READ networkReply WRITE setNetworkReply NOTIFY networkReplyChanged)
 public:
-    explicit Request(QObject *parent = nullptr);
+    explicit Request(QObject* parent = nullptr);
 
-    const QString &method() const;
-    void setMethod(const QString &newMethod);
+    const QString& method() const;
+    void setMethod(const QString& newMethod);
 
-    const QString &url() const;
-    void setUrl(const QString &newUrl);
+    const QString& url() const;
+    void setUrl(const QString& newUrl);
 
-    const QString &name() const;
-    void setName(const QString &newName);
+    const QString& name() const;
+    void setName(const QString& newName);
 
     const QString displayName();
 
-    const QString &body() const;
-    void setBody(const QString &newBody);
+    const QString& body() const;
+    void setBody(const QString& newBody);
 
     ParamTableModelPtr params() const;
     void setParams(ParamTableModelPtr newParams);
@@ -68,8 +91,8 @@ public:
     ResponsePtr response() const;
     void setResponse(ResponsePtr newResponse);
 
-    const QElapsedTimer &requestTimer() const;
-    void setRequestTimer(const QElapsedTimer &newRequestTimer);
+    const QElapsedTimer& requestTimer() const;
+    void setRequestTimer(const QElapsedTimer& newRequestTimer);
 
     MainTab activeTab() const;
     void setActiveTab(MainTab newActiveTab);
@@ -86,8 +109,8 @@ public:
     ResponseBodyType activeResponseBodyType() const;
     void setActiveResponseBodyType(ResponseBodyType newActiveResponseBodyType);
 
-    const QString &requestMode() const;
-    void setRequestMode(const QString &newRequestMode);
+    const QString& requestMode() const;
+    void setRequestMode(const QString& newRequestMode);
 
     ParamTableModelPtr bodyForm() const;
     void setBodyForm(ParamTableModelPtr newBodyForm);
@@ -95,14 +118,14 @@ public:
     ParamTableModelPtr bodyUrlEncoded() const;
     void setBodyUrlEncoded(ParamTableModelPtr newBodyUrlEncoded);
 
-    const QString &bodyBinary() const;
-    void setBodyBinary(const QString &newBodyBinary);
+    const QString& bodyBinary() const;
+    void setBodyBinary(const QString& newBodyBinary);
 
     bool loading() const;
     void setLoading(bool newLoading);
 
-    QNetworkReply *networkReply() const;
-    void setNetworkReply(QNetworkReply *newNetworkReply);
+    QNetworkReply* networkReply() const;
+    void setNetworkReply(QNetworkReply* newNetworkReply);
 
 signals:
     void nameChanged();
@@ -152,7 +175,7 @@ private:
     void setContentTypeForBinaryBody();
     bool m_loading;
 
-    QNetworkReply *m_networkReply;
+    QNetworkReply* m_networkReply;
 
 private slots:
     void onUrlChanged();

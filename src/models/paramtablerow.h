@@ -3,20 +3,19 @@
 
 #include <QString>
 
-class ParamTableRow
-{
+class ParamTableRow {
 public:
     ParamTableRow();
     ParamTableRow(QString key, QString value, QString description);
 
-    const QString &key() const;
-    void setKey(const QString &newKey);
+    const QString& key() const;
+    void setKey(const QString& newKey);
 
-    const QString &value() const;
-    void setValue(const QString &newValue);
+    const QString& value() const;
+    void setValue(const QString& newValue);
 
-    const QString &description() const;
-    void setDescription(const QString &newDescription);
+    const QString& description() const;
+    void setDescription(const QString& newDescription);
 
     bool isEmpty() const { return m_key.isEmpty() && m_value.isEmpty() && m_description.isEmpty(); }
 
